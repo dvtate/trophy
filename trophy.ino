@@ -2,9 +2,11 @@
 
 #include "led.h"
 #include "color.h" //already included by led.h
+#include "ultrasonic.h" 
 
-
-void setup(){}
+void setup(){
+  Serial.begin(9600);
+}
 
 void loop(){
 
@@ -12,7 +14,13 @@ void loop(){
   static TriLED lys(13, 12, 11, Color(255,0,0));
 
   // cycle through rainbow
-  lys.colorCycle();
+  lys.colorCycle(10);
 
-  delay(10);
+  static Ultrasonic sonar(7);
+  
+  Serial.print("Dist =");
+  Serial.print(sonar.getCm());//0~400cm
+  Serial.println(" cm");
+  
+  delay(100);
 }
