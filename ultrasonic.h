@@ -40,10 +40,10 @@ void Ultrasonic::measureDistance(){
   
 }
 
-long microsecondsToCentimeters(long microseconds) // 0 ~ 400cm
+long microsecondsToCentimeters(const long& microseconds) // 0 ~ 400cm
   {return microseconds / 29 / 2;}
 
-long microsecondsToInches(long microseconds) // 0 ~ 157 inches
+long microsecondsToInches(const long& microseconds) // 0 ~ 157 inches
   {return microseconds / 74 / 2;}
 
 #endif
