@@ -20,11 +20,16 @@ public:
     return *this;
   }
 
-  //    void setHSB(const uint16_t& h, const uint16_t& s, const uint16_t& b){}
-  //    void getHSB(uint16_t* h, uint16_t* s, uint16_t* b){}
+  Color& brighten(const float& multiplier){
+    r *= multiplier;
+    g *= multiplier;
+    b *= multiplier;
+    return *this;
+  }
+  //void setHSB(const uint16_t& h, const uint16_t& s, const uint16_t& b){}
+  //void getHSB(uint16_t* h, uint16_t* s, uint16_t* b){}
 
 };
-
 
 Color invert(Color c){
   c.r = 255 - c.r;
@@ -33,25 +38,25 @@ Color invert(Color c){
   return c;
 }
 
-void cycle3(uint8_t& v1, uint8_t& v2, uint8_t& v3, uint8_t& curHi){
-  if (curHi == 1) {
-    v1--;
-    v2++;
-  } 
-  else if (curHi == 2) {
-    v2--;
-    v3++;
-  } 
-  else if (curHi == 3) {
-    v3--;
-    v1++;
-  }
-  if (v1 <= 0 && curHi == 1)
-    curHi = 2;
-  else if (v2 <= 0 && curHi == 2)
-    curHi = 3;
-  else if (v3 <= 0 && curHi == 3)
-    curHi = 1;
-}
 
+namespace color {
+  void cycle3(uint8_t& v1, uint8_t& v2, uint8_t& v3, uint8_t& curHi){
+    if (curHi == 1) {
+      v1--;
+      v2++;
+    } else if (curHi == 2) {
+      v2--;
+      v3++;
+    } else if (curHi == 3) {
+      v3--;
+      v1++;
+    }
+    if (v1 <= 0 && curHi == 1)
+      curHi = 2;
+    else if (v2 <= 0 && curHi == 2)
+      curHi = 3;
+    else if (v3 <= 0 && curHi == 3)
+      curHi = 1;
+  }
+}
 #endif
