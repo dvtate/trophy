@@ -12,6 +12,7 @@ class TriLED {
 public:
   Color color;
   uint8_t pr, pg, pb;
+  
   TriLED(const uint8_t& redPin, const uint8_t& bluePin, const uint8_t& greenPin):
     pr(redPin), pb(bluePin), pg(greenPin), color(0,0,0) 
   {
@@ -19,6 +20,7 @@ public:
     pinMode(pg, OUTPUT);
     pinMode(pb, OUTPUT);
   }
+  
   TriLED(const uint8_t& redPin, const uint8_t& bluePin, const uint8_t& greenPin, Color _clr):
     pr(redPin), pb(bluePin), pg(greenPin), color(_clr) 
   {
@@ -65,10 +67,10 @@ public:
      c3 = color.b;
      */
     while (incr-- > 0)
-      cycle3(color.r, color.g, color.b, curHi);
+      color::cycle3(color.r, color.g, color.b, curHi);
 
 
-    /* for debugging (uses too much resources)
+    /* for debugging only (uses too much resources)
      Serial.print("r:");
      Serial.print(color.r, DEC);
      Serial.print(" g:");
@@ -83,6 +85,27 @@ public:
     analogWrite(pg, color.g);
     analogWrite(pb, color.b);
   }
+};
+
+class BiLED {
+public:
+  uint8_t p1, p2, v1, v2;
+  
+  BiLED(uint8_t pin1, uint8_t pin2):
+    p1(pin1), p2(pin2)
+  {
+    pinMode(p1, OUTPUT);
+    pinMode(p2, OUTPUT);
+  }
+  
+  BiLED(uint8_t pin1, uint8_t pin2, uint8_t val1, uint8_t val2):
+    p1(pin1), p2(pin2), v1(val1), v2(val2)
+  {
+    pinMode(p1, OUTPUT);
+    pinMode(p2, OUTPUT);
+  }
+
+  void SeeSaw( );
 };
 
 #endif
