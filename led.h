@@ -13,16 +13,16 @@ public:
   Color color;
   uint8_t pr, pg, pb;
   
-  TriLED(const uint8_t& redPin, const uint8_t& bluePin, const uint8_t& greenPin):
-    pr(redPin), pb(bluePin), pg(greenPin), color(0,0,0) 
+  TriLED(const uint8_t& redPin, const uint8_t& greenPin, const uint8_t& bluePin):
+    pr(redPin), pg(greenPin), pb(bluePin), color(0,0,0) 
   {
     pinMode(pr, OUTPUT);
     pinMode(pg, OUTPUT);
     pinMode(pb, OUTPUT);
   }
   
-  TriLED(const uint8_t& redPin, const uint8_t& bluePin, const uint8_t& greenPin, Color _clr):
-    pr(redPin), pb(bluePin), pg(greenPin), color(_clr) 
+  TriLED(const uint8_t& redPin, const uint8_t& greenPin, const uint8_t& bluePin, Color _clr):
+    pr(redPin), pg(greenPin), pb(bluePin), color(_clr) 
   {
     pinMode(pr, OUTPUT);
     pinMode(pg, OUTPUT);
@@ -30,10 +30,20 @@ public:
   }
   void setColor(const Color& clr){
     color = clr;
+    analogWrite(pr, color.r);
+    analogWrite(pg, color.g);
+    analogWrite(pb, color.b);
   }
-  Color& getColor(){
-    return color;
+  void setColor(){
+    analogWrite(pr, color.r);
+    analogWrite(pg, color.g);
+    analogWrite(pb, color.b);
   }
+  void refresh()
+    { setColor(); }
+  
+  Color& getColor()
+    { return color; }
 
   void colorCycle(uint8_t incr = 1){
     static uint8_t curHi = 1;
@@ -85,6 +95,21 @@ public:
     analogWrite(pg, color.g);
     analogWrite(pb, color.b);
   }
+  
+  void swapPins(const uint8_t& redPin, const uint8_t& bluePin, const uint8_t& greenPin){
+    pr = redPin;
+    pg = greenpin;
+    pb = bluepin;
+    // set them as output
+    pinMode(pr, OUTPUT);
+    pinMode(pg, OUTPUT);
+    pinMode(pb, OUTPUT);
+    // write the color out
+    analogWrite(pr, color.r);
+    analogWrite(pg, color.g);
+    analogWrite(pb, color.b);
+  }
+  
 };
 
 class BiLED {
@@ -105,7 +130,11 @@ public:
     pinMode(p2, OUTPUT);
   }
 
-  void SeeSaw( );
+  void swap(){
+    register uint8_t temp = v1;
+    v1 = v2;
+    v2 = temp;
+  }
 };
 
 #endif
