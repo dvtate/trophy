@@ -2,6 +2,7 @@
 #define ULTRASONIC_H
 
 #include "Arduino.h"
+
 class Ultrasonic {
   public:
     int pin; //the SIG pin
@@ -33,7 +34,7 @@ void Ultrasonic::measureDistance(){
   delayMicroseconds(5);
   digitalWrite(pin, LOW);
 
-  //detect the pulse
+  // detect the echo from the pulse
   pinMode(pin, INPUT);
   duration = pulseIn(pin, HIGH);
   
