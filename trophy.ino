@@ -10,6 +10,7 @@ void setup(){
 
 void loop(){
 
+
   // init with red on high
   static TriLED lys(13, 12, 11, Color(255,0,0));
 
@@ -19,8 +20,9 @@ void loop(){
   static Ultrasonic sonar(7);
   
   Serial.print("Dist =");
-  Serial.print(sonar.getCm());//0~400cm
+  Serial.print(sonar.getInches());//0~400cm
   Serial.println(" cm");
-  
   delay(100);
+
+
 }
