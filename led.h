@@ -114,26 +114,25 @@ public:
 
 class BiLED {
 public:
-  uint8_t p1, p2, v1, v2;
+  uint8_t p0, p1, v0, v1;
   
   BiLED(uint8_t pin1, uint8_t pin2):
-    p1(pin1), p2(pin2)
+    p0(pin1), p1(pin2)
   {
+    pinMode(p0, OUTPUT);
     pinMode(p1, OUTPUT);
-    pinMode(p2, OUTPUT);
-  }
-  
+  }  
   BiLED(uint8_t pin1, uint8_t pin2, uint8_t val1, uint8_t val2):
-    p1(pin1), p2(pin2), v1(val1), v2(val2)
+    p0(pin1), p1(pin2), v0(val1), v1(val2)
   {
+    pinMode(p0, OUTPUT);
     pinMode(p1, OUTPUT);
-    pinMode(p2, OUTPUT);
   }
 
   void swap(){
-    register uint8_t temp = v1;
-    v1 = v2;
-    v2 = temp;
+    register uint8_t temp = v0;
+    v0 = v1;
+    v1 = temp;
   }
 };
 
