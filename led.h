@@ -117,7 +117,7 @@ public:
   uint8_t p0, p1, v0, v1;
   
   BiLED(uint8_t pin1, uint8_t pin2):
-    p0(pin1), p1(pin2)
+    p0(pin1), p1(pin2), v0(0), v1(0)
   {
     pinMode(p0, OUTPUT);
     pinMode(p1, OUTPUT);
