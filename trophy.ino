@@ -20,9 +20,8 @@ void loop(){
   static Ultrasonic sonar(7);
   
   Serial.print("Dist =");
-  Serial.print(sonar.getInches());//0~400cm
+  Serial.print(sonar.getCm()); //0~400cm (796 = timeout)
   Serial.println(" cm");
+
   delay(100);
-
-
 }
