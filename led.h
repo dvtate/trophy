@@ -45,8 +45,7 @@ public:
   Color& getColor()
     { return color; }
 
-  void colorCycle(uint8_t incr = 1){
-    static uint8_t curHi = 1;
+  void colorCycle(uint8_t incr = 1, uint8_t curHi = 1){ 
 
     /* this is glitchy for unknown reasons...
      uint8_t &c1 = color.r, &c2 = color.g, &c3 = color.b;
@@ -91,48 +90,66 @@ public:
      Serial.println(curHi, DEC);
      */
 
-    analogWrite(pr, color.r);
-    analogWrite(pg, color.g);
-    analogWrite(pb, color.b);
+    setColor();
   }
-  
+
+  // this will never get used...
   void swapPins(const uint8_t& redPin, const uint8_t& bluePin, const uint8_t& greenPin){
     pr = redPin;
-    pg = greenpin;
-    pb = bluepin;
+    pg = greenPin;
+    pb = bluePin;
     // set them as output
     pinMode(pr, OUTPUT);
     pinMode(pg, OUTPUT);
     pinMode(pb, OUTPUT);
-    // write the color out
-    analogWrite(pr, color.r);
-    analogWrite(pg, color.g);
-    analogWrite(pb, color.b);
+    
+    setColor();
   }
   
 };
 
 class BiLED {
 public:
-  uint8_t p0, p1, v0, v1;
+  uint8_t p0, p1;
+  bool v0, v1; // could be replaced by uint8_t for PWM output
   
-  BiLED(uint8_t pin1, uint8_t pin2):
-    p0(pin1), p1(pin2), v0(0), v1(0)
+  BiLED(uint8_t pin0, uint8_t pin1):
+    p0(pin0), p1(pin1), v0(LOW), v1(LOW)
   {
     pinMode(p0, OUTPUT);
     pinMode(p1, OUTPUT);
   }  
-  BiLED(uint8_t pin1, uint8_t pin2, uint8_t val1, uint8_t val2):
-    p0(pin1), p1(pin2), v0(val1), v1(val2)
+  BiLED(uint8_t pin0, uint8_t pin1, uint8_t val0, uint8_t val1):
+    p0(pin0), p1(pin1), v0(val0), v1(val1)
   {
     pinMode(p0, OUTPUT);
     pinMode(p1, OUTPUT);
   }
 
+  void refresh(){
+    digitalWrite(p0,v0);
+    digitalWrite(p1,v1);
+  }
+  void set(bool val0, bool val1){
+    v0 = val0;
+    v1 = val1;
+    refresh();
+  }
+  void off(){
+    v0 = LOW;
+    v1 = LOW;
+    refresh();
+  }
+  void on(){
+    v0 = HIGH;
+    v1 = HIGH;
+    refresh();
+  }
   void swap(){
-    register uint8_t temp = v0;
+    register bool temp = v0;
     v0 = v1;
     v1 = temp;
+    refresh();
   }
 };
 
