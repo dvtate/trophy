@@ -130,27 +130,19 @@ public:
     digitalWrite(p0,v0);
     digitalWrite(p1,v1);
   }
-  void set(bool val0, bool val1){
+  void set(uint8_t val0, uint8_t val1){
     v0 = val0;
     v1 = val1;
     refresh();
   }
-  void off(){
-    v0 = LOW;
-    v1 = LOW;
-    refresh();
-  }
-  void on(){
-    v0 = HIGH;
-    v1 = HIGH;
-    refresh();
-  }
   void swap(){
-    register bool temp = v0;
+    bool temp = v0;
     v0 = v1;
     v1 = temp;
     refresh();
   }
+
+  
 };
 
 #endif
