@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-// pod color class
+// POD color class
 class Color {
 public:
   uint8_t r, g, b;
@@ -26,8 +26,6 @@ public:
     b *= multiplier;
     return *this;
   }
-  //void setHSB(const uint16_t& h, const uint16_t& s, const uint16_t& b){}
-  //void getHSB(uint16_t* h, uint16_t* s, uint16_t* b){}
 
 };
 
@@ -42,15 +40,13 @@ Color invert(Color c){
 namespace color {
   void cycle3(uint8_t& v1, uint8_t& v2, uint8_t& v3, uint8_t& curHi){
     if (curHi == 1) {
-      v1--;
-      v2++;
+      v1--; v2++;
     } else if (curHi == 2) {
-      v2--;
-      v3++;
+      v2--; v3++;
     } else if (curHi == 3) {
-      v3--;
-      v1++;
+      v3--; v1++;
     }
+    
     if (v1 <= 0 && curHi == 1)
       curHi = 2;
     else if (v2 <= 0 && curHi == 2)
