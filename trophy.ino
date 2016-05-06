@@ -80,7 +80,7 @@ void setup(){
   // we need a random seed to get our random numbers from 
   // reading from an unused pin results in a relatively random number
   // however, we dont want to sacrifice a pin for this, so I inserted `686`
-  randomSeed(analogRead(686)); 
+  randomSeed(686); 
   
 }
 
