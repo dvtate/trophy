@@ -5,31 +5,63 @@
 #include "led.h"
 #include "color.h" //already included by led.h
 #include "ultrasonic.h" 
-#include "buzzer.h"
+#include "pushButton.h"
 
+
+
+//hardware:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+TriLED rgb0(13,12,11,Color(255,0,0));
+
+
+// the ultrasonic sensor user interface
+Ultrasonic sonar(7);
+
+
+// buzzer
+#define BUZZPIN 5
+bool audioEnabled = true;
+// audio toggle
+PushButton buzzButton(39);
+// audio indicator
+#define BUZZLEDPIN 22
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+void soundCheck(){
+  audioEnabled = !buzzButton.toggle();
+  digitalWrite(BUZZLEDPIN, audioEnabled);
+}
 
 // prototype functions to preavent errors
-bool checkInput();
-void nextPattern();
+extern bool checkInput();
+extern void nextPattern();
 
 // a namespace filled with functions which are called to make the trophy light up and stuff
 namespace lightPatterns {
   // the pattern that gets replaced by other patterns
   void initial(){
-    static TriLED lys(13,12,11,Color(255,0,0));
-    
-    if (checkInput()) return; // break out of the function on user input 
-    
+
+    // pattern code goes here:
+    rgb0.colorCycle();
+    // must be called periodically 
+    soundCheck();
+    if (checkInput()) return;
   }
 
   void pattern1(){
-    
+    rgb0.setColor(Color(255,0,0));
+    // pattern code goes here:
   }
   void pattern2(){
-    
+    rgb0.setColor(Color(0,0,255));
+    // pattern code goes here:
   }
   void pattern3(){
-    
+    rgb0.setColor(Color(0,255,0));
+    // pattern code goes here:
   }
 }
 
@@ -48,27 +80,37 @@ void (*patterns[NUMBER_OF_PATTERNS])(void) = {
 void (*currentPattern)(void) = lightPatterns::initial;
 
 
-
-
-
-// the ultrasonic sensor user interface
-Ultrasonic sonar(7);
-
-
-
-
 // choose a different pattern
 void nextPattern(){
-  currentPattern = patterns[random(NUMBER_OF_PATTERNS)];  
+  
+  static uint8_t patternNumber = 0;
+  
+  if (patternNumber < (NUMBER_OF_PATTERNS - 1))
+    patternNumber++;
+  else
+    patternNumber = 0;
+  
+  currentPattern = patterns[patternNumber];
+  
 }
 
 // returns true when it's time to switch patterns
 bool checkInput(){
+
+  static bool previous = false;
+  
   // if user's hand is detected
-  if (sonar.getCm() < 20) {
+  if (previous && sonar.getCm() < 20) {
+    
     nextPattern();
+    
+    if (audioEnabled)
+      tone(BUZZPIN,150,25);
+    
     return true;
   }
+  digitalWrite(13, LOW);
+  previous = (sonar.getCm() < 20);
   return false;
 }
 
@@ -76,21 +118,20 @@ bool checkInput(){
 void setup(){
 
   Serial.begin(9600);
-
-  // we need a random seed to get our random numbers from 
-  // reading from an unused pin results in a relatively random number
-  // however, we dont want to sacrifice a pin for this, so I inserted `686`
-  randomSeed(686); 
   
+
 }
 
 void loop(){
 
   currentPattern();
 
-/*  
+  checkInput();
+    
+
+
   Serial.print("Dist =");
   Serial.print(sonar.getCm()); //0~400cm (796 = timeout)
   Serial.println(" cm");
-*/
+
 }
