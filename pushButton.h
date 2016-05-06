@@ -18,6 +18,11 @@ public:
   bool get()
   { return (value = digitalRead(pin)); }
   
+  void toggle(bool& out);
+
+  void toggle(uint8_t pin);
+
+  void toggle(void (*function)());
 
 };
 
