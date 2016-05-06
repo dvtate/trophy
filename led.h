@@ -111,7 +111,7 @@ public:
 class BiLED {
 public:
   uint8_t p0, p1;
-  bool v0, v1; // could be replaced by uint8_t for PWM output
+  Uint8_t v0, v1; // could be replaced by uint8_t for PWM output
   
   BiLED(uint8_t pin0, uint8_t pin1):
     p0(pin0), p1(pin1), v0(LOW), v1(LOW)
@@ -136,7 +136,7 @@ public:
     refresh();
   }
   void swap(){
-    bool temp = v0;
+    uint8_t temp = v0;
     v0 = v1;
     v1 = temp;
     refresh();
