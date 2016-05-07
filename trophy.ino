@@ -56,7 +56,7 @@ namespace lightPatterns {
 
     // must be called periodically 
     soundCheck();
-    resetLEDs();
+    //resetLEDs();
 
     // don't call checkInput() here...
       // (freezes leds in their current state)
@@ -146,13 +146,23 @@ void soundCheck(){
   digitalWrite(BUZZLEDPIN, audioEnabled);
 }
 
-void setup(){
-  Serial.begin(9600);
+inline void resetLEDs(){
+
 }
 
-inline void resetLEDs(){
-    rgb0.off();
-    flasher.off();
+void setup(){
+  Serial.begin(9600);
+
+  while(1){
+    currentPattern();
+    if (checkInput()) break;
+    delay(5);
+    
+  }
+
+  // reset the LEDs
+  rgb0.setColor(Color(0,0,0));
+  flasher.set(0,0);
 }
 
 void loop(){
