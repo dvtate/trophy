@@ -3,7 +3,7 @@
 #include <inttypes.h>
 
 #include "led.h"
-#include "color.h" //already included by led.h
+#include "color.h" //included by led.h
 #include "ultrasonic.h" 
 #include "pushButton.h"
 
@@ -13,13 +13,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 TriLED rgb0(13,12,11,Color(255,0,0));
 
+BiLED flasher(6, 5, 255, 0);
 
 // the ultrasonic sensor user interface
 Ultrasonic sonar(7);
 
 
 // buzzer
-#define BUZZPIN 5
+#define BUZZPIN 3
 bool audioEnabled = true;
 // audio toggle
 PushButton buzzButton(39);
@@ -30,38 +31,65 @@ PushButton buzzButton(39);
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-void soundCheck(){
-  audioEnabled = !buzzButton.toggle();
-  digitalWrite(BUZZLEDPIN, audioEnabled);
-}
+
 
 // prototype functions to preavent errors
 extern bool checkInput();
 extern void nextPattern();
+extern void soundCheck();
+extern void resetLEDs();
 
 // a namespace filled with functions which are called to make the trophy light up and stuff
 namespace lightPatterns {
   // the pattern that gets replaced by other patterns
   void initial(){
 
-    // pattern code goes here:
-    rgb0.colorCycle();
+    // pattern code goes here...
+
+    rgb0.colorCycle(4);
+    flasher.seeSaw(16);
+    delay(5);
+    rgb0.colorCycle(4);
+    flasher.seeSaw(16);
+
+
+
     // must be called periodically 
     soundCheck();
-    if (checkInput()) return;
+    resetLEDs();
+
+    // don't call checkInput() here...
+      // (freezes leds in their current state)
   }
 
   void pattern1(){
-    rgb0.setColor(Color(255,0,0));
-    // pattern code goes here:
+
+    // pattern code goes here...
+    rgb0.setColor(Color(255, 0, 0));
+
+    // should get called periodically
+    if (checkInput()) return;
+    soundCheck();
   }
   void pattern2(){
-    rgb0.setColor(Color(0,0,255));
-    // pattern code goes here:
+    
+    // pattern code goes here...
+    rgb0.setColor(Color(0, 255, 0));
+
+    
+    // should get called periodically
+    if (checkInput()) return;
+    soundCheck();
   }
   void pattern3(){
-    rgb0.setColor(Color(0,255,0));
-    // pattern code goes here:
+    
+    // pattern code goes here...
+    rgb0.setColor(Color(0, 0, 255));
+
+    
+    // should get called periodically
+    if (checkInput()) return;
+    soundCheck();
   }
 }
 
@@ -109,29 +137,36 @@ bool checkInput(){
     
     return true;
   }
-  digitalWrite(13, LOW);
   previous = (sonar.getCm() < 20);
   return false;
 }
 
+void soundCheck(){
+  audioEnabled = !buzzButton.toggle();
+  digitalWrite(BUZZLEDPIN, audioEnabled);
+}
 
 void setup(){
-
   Serial.begin(9600);
-  
+}
 
+inline void resetLEDs(){
+    rgb0.off();
+    flasher.off();
 }
 
 void loop(){
 
+  //so simple :D
   currentPattern();
-
   checkInput();
-    
+  delay(5);
 
+  // just to make me happy :)
 
+  /*
   Serial.print("Dist =");
   Serial.print(sonar.getCm()); //0~400cm (796 = timeout)
   Serial.println(" cm");
-
+  */
 }
