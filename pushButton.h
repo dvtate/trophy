@@ -3,8 +3,6 @@
 
 #include "Arduino.h"
 
-// this shouldn't be an object
-
 class PushButton {
 public:
   uint8_t pin;
@@ -16,7 +14,7 @@ public:
 
 
   bool get()
-  { return (value = digitalRead(pin)); }
+    { return (value = digitalRead(pin)); }
   
   bool toggle(){
     static bool canChange = false;
