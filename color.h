@@ -38,21 +38,34 @@ Color invert(Color c){
 
 
 namespace color {
-  void cycle3(uint8_t& v1, uint8_t& v2, uint8_t& v3, uint8_t& curHi){
-    if (curHi == 1) {
+  
+  void cycle3(uint8_t& v0, uint8_t& v1, uint8_t& v2, uint8_t& curHi){
+    if (curHi == 0) {
+      v0--; v1++;
+    } else if (curHi == 1) {
       v1--; v2++;
     } else if (curHi == 2) {
-      v2--; v3++;
-    } else if (curHi == 3) {
-      v3--; v1++;
+      v2--; v0++;
     }
     
-    if (v1 <= 0 && curHi == 1)
+    if (v0 <= 0 && curHi == 0)
+      curHi = 1;
+    else if (v1 <= 0 && curHi == 1)
       curHi = 2;
     else if (v2 <= 0 && curHi == 2)
-      curHi = 3;
-    else if (v3 <= 0 && curHi == 3)
-      curHi = 1;
+      curHi = 0;
+  }
+
+  void cycle2(uint8_t& v0, uint8_t& v1, bool& curHi){
+    if (!curHi) {
+      v0--; v1++;
+    } else {
+      v1--; v0--;
+    }
+    
+    if (v0 == 0 || v1 == 0)
+      curHi = !curHi;
   }
 }
+
 #endif
