@@ -19,14 +19,18 @@ public:
   { return (value = digitalRead(pin)); }
   
   bool toggle(){
-    static bool previous = false;
+    static bool canChange = false;
+    static bool state = LOW;
+
     
-    if (!digitalRead(pin) && previous)
-      return previous = false;
-    else if (digitalRead(pin) && !previous)
-      return previous = true;
+    if (digitalRead(pin) && !canChange) {
+      canChange = true;
+    } else if (!digitalRead(pin) && canChange) {
+      canChange = false;
+      return state = !state;
+    }
     
-    return false;
+    return state;
   }
 
 };
