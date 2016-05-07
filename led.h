@@ -39,42 +39,54 @@ public:
     analogWrite(pg, color.g);
     analogWrite(pb, color.b);
   }
-  void refresh()
-    { setColor(); }
+  void refresh(){
+    setColor(); 
+  }
+
+  
+  // sets output to zero without clearing the values
+  void off(){
+    analogWrite(pr, 0);
+    analogWrite(pg, 0);
+    analogWrite(pb, 0);
+  }
   
   Color& getColor()
     { return color; }
 
-  void colorCycle(uint8_t incr = 1, uint8_t curHi = 1){ 
+  void colorCycle(uint8_t incr = 1){
 
     /* this is glitchy for unknown reasons...
-     uint8_t &c1 = color.r, &c2 = color.g, &c3 = color.b;
-     
-     if (*order == 'r')
-     c1 = color.r;
-     else if (*order == 'g')
-     c1 = color.g;
-     else if (*order == 'b')
-     c1 = color.b;
-     
-     order++; //next char
-     
-     if (*order == 'r')
-     c2 = color.r;
-     else if (*order == 'g')
-     c2 = color.g;
-     else if (*order == 'b')
-     c2 = color.b;
-     
-     order++; //next char
-     
-     if (*order == 'r')
-     c3 = color.r;
-     else if (*order == 'g')
-     c3 = color.g;
-     else if (*order == 'b')
-     c3 = color.b;
-     */
+    uint8_t &c1 = color.r, &c2 = color.g, &c3 = color.b;
+    
+    if (*order == 'r')
+    c1 = color.r;
+    else if (*order == 'g')
+    c1 = color.g;
+    else if (*order == 'b')
+    c1 = color.b;
+    
+    order++; //next char
+    
+    if (*order == 'r')
+    c2 = color.r;
+    else if (*order == 'g')
+    c2 = color.g;
+    else if (*order == 'b')
+    c2 = color.b;
+    
+    order++; //next char
+    
+    if (*order == 'r')
+    c3 = color.r;
+    else if (*order == 'g')
+    c3 = color.g;
+    else if (*order == 'b')
+    c3 = color.b;
+    */
+    
+    static uint8_t curHi = 0;
+    
     while (incr-- > 0)
       color::cycle3(color.r, color.g, color.b, curHi);
 
@@ -88,7 +100,14 @@ public:
      Serial.print(color.b, DEC);
      Serial.print(" CurHi: ");
      Serial.println(curHi, DEC);
-     */
+   */
+
+    setColor();
+  }
+  
+  void colorCycle(uint8_t& curHi, uint8_t incr = 1){
+    while (incr-- > 0)
+      color::cycle3(color.r, color.g, color.b, curHi);
 
     setColor();
   }
@@ -111,15 +130,15 @@ public:
 class BiLED {
 public:
   uint8_t p0, p1;
-  Uint8_t v0, v1; // could be replaced by uint8_t for PWM output
+  uint8_t v0, v1; // could be replaced by uint8_t for PWM output
   
-  BiLED(uint8_t pin0, uint8_t pin1):
-    p0(pin0), p1(pin1), v0(LOW), v1(LOW)
+  BiLED(const uint8_t& pin0, const uint8_t& pin1):
+    p0(pin0), p1(pin1), v0(0), v1(0)
   {
     pinMode(p0, OUTPUT);
     pinMode(p1, OUTPUT);
-  }  
-  BiLED(uint8_t pin0, uint8_t pin1, uint8_t val0, uint8_t val1):
+  }
+  BiLED(const uint8_t& pin0, const uint8_t& pin1, const uint8_t& val0, const uint8_t& val1):
     p0(pin0), p1(pin1), v0(val0), v1(val1)
   {
     pinMode(p0, OUTPUT);
@@ -127,18 +146,61 @@ public:
   }
 
   void refresh(){
-    digitalWrite(p0,v0);
-    digitalWrite(p1,v1);
+    analogWrite(p0,v0);
+    analogWrite(p1,v1);
   }
-  void set(uint8_t val0, uint8_t val1){
+  void set(const uint8_t& val0, const uint8_t& val1){
     v0 = val0;
     v1 = val1;
     refresh();
   }
+
+  // sets output to zero without clearing the values
+  void off(){
+    analogWrite(p0, 0);
+    analogWrite(p1, 0);
+  }
+  
   void swap(){
     uint8_t temp = v0;
     v0 = v1;
     v1 = temp;
+    refresh();
+  }
+
+  void seeSaw(uint8_t incr = 1){
+ 
+    static bool curHi = 0;
+    
+    while (incr-- > 0) {
+    
+      if (!curHi) {
+        v0--; v1++;
+      } else {
+        v1--; v0++;
+      }
+      
+      if (!v0 || !v1)
+        curHi = !curHi;
+        
+    }
+    refresh();
+   
+  }
+  
+  void seeSaw(uint8_t& curHi, uint8_t incr = 1){
+  
+    while (incr-- > 0) {
+      if (!curHi) {
+        v0--; v1++;
+      } else {
+        v1--; v0++;
+      }
+      
+      if (!v0 || !v1)
+        curHi = !curHi;
+    }
+    
     refresh();
   }
 
