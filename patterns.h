@@ -17,10 +17,9 @@ namespace lightPatterns {
     // pattern code goes here...
     rgb0.colorCycle(4);
     flasher.seeSaw(16);
-    delay(5);
+    delay(4);
     rgb0.colorCycle(4);
     flasher.seeSaw(16);
-
 
 
     // must be called periodically 
