@@ -188,17 +188,20 @@ public:
    
   }
   
-  void seeSaw(uint8_t& curHi, uint8_t incr = 1){
+  void seeSaw(bool& curHi, uint8_t incr = 1){
   
     while (incr-- > 0) {
+      
       if (!curHi) {
         v0--; v1++;
       } else {
         v1--; v0++;
       }
-      
+
+      // switch directions
       if (!v0 || !v1)
         curHi = !curHi;
+        
     }
     
     refresh();
