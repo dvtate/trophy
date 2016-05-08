@@ -56,7 +56,7 @@ public:
 
   void colorCycle(uint8_t incr = 1){
 
-    /* this is glitchy for unknown reasons...
+    /* this is glitchy...
     uint8_t &c1 = color.r, &c2 = color.g, &c3 = color.b;
     
     if (*order == 'r')
@@ -206,7 +206,6 @@ public:
     
     refresh();
   }
-
   
 };
 
