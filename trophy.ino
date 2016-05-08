@@ -9,23 +9,27 @@
 
 
 
-//hardware:
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+//hardware
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 TriLED rgb0(13,12,11,Color(255,0,0));
 
 BiLED flasher(6, 5, 255, 0);
 
-// the ultrasonic sensor user interface
+// the ultrasonic sensor / user interface
 Ultrasonic sonar(7);
 
 
 // buzzer
 #define BUZZPIN 3
-bool audioEnabled = true;
+
 // audio toggle
-PushButton buzzButton(39);
+PushButton buzzButton(2);
+
 // audio indicator
-#define BUZZLEDPIN 22
+#define BUZZLEDPIN 9
+bool audioEnabled = true;
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -47,34 +51,34 @@ void (*currentPattern)(void) = lightPatterns::initial;
 
 // choose a different pattern
 void nextPattern(){
-  
+
   static uint8_t patternNumber = 0;
-  
+
   if (patternNumber < (NUMBER_OF_PATTERNS - 1))
     patternNumber++;
   else
     patternNumber = 0;
-  
+
   currentPattern = patterns[patternNumber];
-  
+
 }
 
 // returns true when it's time to switch patterns
 bool checkInput(){
 
   static bool previous = false;
-  
+
   // if user's hand is detected
   if (previous && sonar.getCm() < 20) {
-    
+
     nextPattern();
-    
-    if (audioEnabled)
-      tone(BUZZPIN,150,25);
+
+    if (audioEnabled) // ring 150Hz Square tone for 10ms
+      tone(BUZZPIN, 150, 10); 
     
     return true;
   }
-  previous = (sonar.getCm() < 20);
+  previous = sonar.getCm() < 20;
   return false;
 }
 
@@ -84,30 +88,38 @@ void soundCheck(){
 }
 
 inline void resetLEDs(){
-  rgb0.setColor(Color(0,0,0));
+  rgb0.setColor(Color(0, 0, 0));
   flasher.set(0,0);
 }
 
 void setup(){
-  Serial.begin(9600);
+  
+  // Serial.begin(9600);
 
-  while(1){
-    currentPattern();
-    if (checkInput()) break;
-    delay(5);
-    
+  // disable pull-up resistor
+  pinMode(BUZZLEDPIN, OUTPUT);
+
+  for (;1;) { // infinite crying
+    currentPattern(); // call initial pattern until user input is recieved
+    delay(4);
+
   }
 
   // reset the LEDs
-  rgb0.setColor(Color(0,0,0));
-  flasher.set(0,0);
+  rgb0.setColor(Color(0, 0, 0));
+  flasher.set(0, 0);
+
 }
 
 void loop(){
 
   //so simple :D
   currentPattern();
-  checkInput(); // might not be needed
+
+ // called in currentPattern()  
+//  soundCheck();
+//  checkInput();
+
   delay(5);
 
   /*
