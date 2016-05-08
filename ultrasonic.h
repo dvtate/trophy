@@ -4,6 +4,7 @@
 #include "Arduino.h"
 
 class Ultrasonic {
+
 public:
   uint8_t pin; //the SIG pin
   uint16_t duration;// the Pulse time received;
@@ -22,7 +23,26 @@ public:
   
     // detect the echo from the pulse
     pinMode(pin, INPUT);
-    duration = pulseIn(pin, HIGH, 59200); // timeout of 400cm
+    duration = pulseIn(pin, HIGH, 4000 /*59200*/); // NOTE: timeout
+    if (duration == 0)
+      duration = 59200;
+  }
+  
+  // idk why this is somewhat glitchy...
+  bool lessThan20Cm(){
+   
+    // produce a pulse
+    pinMode(pin, OUTPUT);
+    digitalWrite(pin, LOW);
+    delayMicroseconds(2); //thats a delay!!
+    digitalWrite(pin, HIGH);
+    delayMicroseconds(5);
+    digitalWrite(pin, LOW);
+  
+    // detect the echo from the pulse
+    pinMode(pin, INPUT);
+    return pulseIn(pin, HIGH, 1160); // returns 0 if >20cm
+    
   }
 
   // returns 796 upon timeout
@@ -44,12 +64,12 @@ public:
 // and return, so we divide by 2 to get the distance of the obstacle.
 // See: http://www.parallax.com/dl/docs/prod/acc/28015-PING-v1.3.pdf
 long microsecondsToCentimeters(const long& microseconds) // 0 ~ 400cm
-  {return microseconds / 29 / 2;}
+  { return microseconds / 29 / 2; }
 
 // The speed of sound is 340 m/s or 29 microseconds per centimeter.
 // The ping travels out and back, so to find the distance of the
 // object we take half of the distance travelled.
 long microsecondsToInches(const long& microseconds) // 0 ~ 157 inches
-  {return microseconds / 74 / 2;}
+  { return microseconds / 74 / 2; }
 
 #endif
