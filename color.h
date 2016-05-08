@@ -29,16 +29,18 @@ public:
 
 };
 
-Color invert(Color c){
-  c.r = 255 - c.r;
-  c.g = 255 - c.g;
-  c.b = 255 - c.b;
-  return c;
-}
 
 
 namespace color {
+
   
+  Color invert(Color c){
+    c.r = 255 - c.r;
+    c.g = 255 - c.g;
+    c.b = 255 - c.b;
+    return c;
+  }
+
   void cycle3(uint8_t& v0, uint8_t& v1, uint8_t& v2, uint8_t& curHi){
     if (curHi == 0) {
       v0--; v1++;
@@ -47,7 +49,7 @@ namespace color {
     } else if (curHi == 2) {
       v2--; v0++;
     }
-    
+
     if (v0 <= 0 && curHi == 0)
       curHi = 1;
     else if (v1 <= 0 && curHi == 1)
@@ -63,9 +65,11 @@ namespace color {
       v1--; v0--;
     }
     
-    if (v0 == 0 || v1 == 0)
+    if (v0 == 0 || !v1 == 0)
       curHi = !curHi;
+
   }
+
 }
 
 #endif
