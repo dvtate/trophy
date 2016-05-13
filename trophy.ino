@@ -16,17 +16,18 @@
 
 
 TriLED rgbs[2] {
-  TriLED(13, 12, 11, Color(255, 0, 0));
-  TriLED(10, 9, 8, Color(255, 0, 0));
+  TriLED(13, 12, 11, Color(255, 0, 0)),
+  TriLED(10, 9, 8, Color(255, 0, 0))
 };
 
-const& TriLED rgb0 = rgbs[0], rgb1 = rgbs[1];
+TriLED& rgb0 = rgbs[0], rgb1 = rgbs[1];
 
 
 BiLED redBlues[2][2]{
-  BiLED(A0, A1), BiLED(A2, A3),
-  BiLED(A4, A5), BiLED(A6, A7)
+  BiLED(A0, A1, 255, 0), BiLED(A4, A5, 255, 0),
+  BiLED(A2, A3, 255, 0), BiLED(A6, A7, 255, 0)
 };
+
 
 
 // the ultrasonic sensor / user interface
@@ -52,9 +53,9 @@ bool audioEnabled = true;
 
 // the jump table of the different light patterns
 void (*patterns[NUMBER_OF_PATTERNS])(void) = {
+  lightPatterns::pattern0,
   lightPatterns::pattern1,
-  lightPatterns::pattern2,
-  lightPatterns::pattern3
+  lightPatterns::pattern2
 };
 
 // the currently selected light pattern
@@ -100,14 +101,28 @@ void soundCheck(){
 }
 
 inline void resetLEDs(){
-  rgb0.setColor(Color(0, 0, 0));
-  flasher.set(0,0);
+  
+  rgbs[0].set(Color(0,0,0));
+  rgbs[1].set(Color(0,0,0));
+  
+  redBlues[0][0].set(0, 0);
+  redBlues[0][1].set(0, 0);
+  redBlues[1][0].set(0, 0);
+  redBlues[1][1].set(0, 0);
+  
+}
+inline void refreshLEDs(){
+  rgbs[0].refresh();
+  rgbs[1].refresh();
+  
+  redBlues[0][0].refresh();
+  redBlues[0][1].refresh();
+  redBlues[1][0].refresh();
+  redBlues[1][1].refresh();
 }
 
 void setup(){
   
-  // Serial.begin(9600);
-
   // disable pull-up resistor
   pinMode(BUZZLEDPIN, OUTPUT);
 
@@ -117,10 +132,8 @@ void setup(){
 
   }
 
-  // reset the LEDs
-  rgb0.setColor(Color(0, 0, 0));
-  flasher.set(0, 0);
-
+  resetLEDs();
+  
 }
 
 void loop(){
@@ -129,7 +142,7 @@ void loop(){
   currentPattern();
 
  // called in currentPattern()  
-//  soundCheck();
+  soundCheck();
 //  checkInput();
 
   delay(5);
