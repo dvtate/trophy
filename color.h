@@ -69,7 +69,20 @@ namespace color {
       curHi = !curHi;
 
   }
-
+  
+  void cycle2(uint8_t& v0, uint8_t& v1, bool& curHi, uint8_t incr){
+    while (incr--) {
+      if (!curHi) {
+        v0--; v1++;
+      } else {
+        v1--; v0--;
+      }
+      
+      if (v0 == 0 || !v1 == 0)
+        curHi = !curHi;
+        
+    }
+  }
 }
 
 #endif
