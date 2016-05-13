@@ -11,7 +11,7 @@
 class TriLED {
 public:
   Color color;
-  uint8_t pr, pg, pb;
+  uint8_t pr:7, pg:7, pb:7;
   
   TriLED(const uint8_t& redPin, const uint8_t& greenPin, const uint8_t& bluePin):
     pr(redPin), pg(greenPin), pb(bluePin), color(0,0,0) 
@@ -34,13 +34,25 @@ public:
     analogWrite(pg, color.g);
     analogWrite(pb, color.b);
   }
-  void setColor(){
+  void setColor()
+    { refresh(); }
+
+  void set(const Color& clr)
+    { setColor(clr); }
+  void set()
+    { setColor(); }
+
+  void set(const uint8_t& r, const uint8_t& g, const uint8_t& b){
+    color.r = r;
+    color.g = g;
+    color.b = b;
+    setColor(); // write/apply changes
+  }
+    
+  void refresh(){
     analogWrite(pr, color.r);
     analogWrite(pg, color.g);
     analogWrite(pb, color.b);
-  }
-  void refresh(){
-    setColor(); 
   }
 
   
@@ -54,11 +66,11 @@ public:
   Color& getColor()
     { return color; }
 
-  void colorCycle(uint8_t incr = 1){
+  void colorCycle(const char* order, uint8_t incr = 1){
 
-    /* this is glitchy...
+    // this isn't easy...
     uint8_t &c1 = color.r, &c2 = color.g, &c3 = color.b;
-    
+
     if (*order == 'r')
     c1 = color.r;
     else if (*order == 'g')
@@ -83,13 +95,11 @@ public:
     c3 = color.g;
     else if (*order == 'b')
     c3 = color.b;
-    */
     
     static uint8_t curHi = 0;
     
     while (incr-- > 0)
-      color::cycle3(color.r, color.g, color.b, curHi);
-
+      color::cycle3(c1, c2, c3, curHi);
 
     /* for debugging only (uses too much resources)
      Serial.print("r:");
@@ -103,8 +113,19 @@ public:
    */
 
     setColor();
+    
   }
+
+  void colorCycle(uint8_t incr = 1){
+    
+    static uint8_t curHi = 0;
   
+    while (incr-- > 0)
+      color::cycle3(color.r, color.g, color.b, curHi);
+
+    setColor();
+  }
+
   void colorCycle(uint8_t& curHi, uint8_t incr = 1){
     while (incr-- > 0)
       color::cycle3(color.r, color.g, color.b, curHi);
@@ -127,10 +148,10 @@ public:
   
 };
 
-class BiLED {
+class BiLED { // digital
 public:
-  uint8_t p0, p1;
-  uint8_t v0, v1; // could be replaced by uint8_t for PWM output
+  unsigned short int p0:7, p1:7;
+  bool v0:1, v1:1; // could be replaced by uint8_t for PWM output
   
   BiLED(const uint8_t& pin0, const uint8_t& pin1):
     p0(pin0), p1(pin1), v0(0), v1(0)
@@ -138,7 +159,54 @@ public:
     pinMode(p0, OUTPUT);
     pinMode(p1, OUTPUT);
   }
-  BiLED(const uint8_t& pin0, const uint8_t& pin1, const uint8_t& val0, const uint8_t& val1):
+  BiLED(const uint8_t& pin0, const uint8_t& pin1, const bool& val0, const bool& val1):
+    p0(pin0), p1(pin1), v0(val0), v1(val1)
+  {
+    pinMode(p0, OUTPUT);
+    pinMode(p1, OUTPUT);
+  }
+
+  void refresh(){
+    digitalWrite(p0,v0);
+    digitalWrite(p1,v1);
+  }
+  void set(const uint8_t& val0, const uint8_t& val1){
+    v0 = val0;
+    v1 = val1;
+    refresh();
+  }
+  void set(const uint8_t& val){
+    v0 = val;
+    v1 = val;
+    refresh();
+  }
+
+  // sets output to zero without clearing the values
+  void off(){
+    digitalWrite(p0, 0);
+    digitalWrite(p1, 0);
+  }
+  
+  void swap(){
+    bool temp = v0;
+    v0 = v1;
+    v1 = temp;
+    refresh();
+  }
+};
+/*
+class BiLED_pwm {
+public:
+  uint8_t p0, p1;
+  uint8_t v0, v1; // could be replaced by uint8_t for PWM output
+  
+  BiLED_pwm(const uint8_t& pin0, const uint8_t& pin1):
+    p0(pin0), p1(pin1), v0(0), v1(0)
+  {
+    pinMode(p0, OUTPUT);
+    pinMode(p1, OUTPUT);
+  }
+  BiLED_pwm(const uint8_t& pin0, const uint8_t& pin1, const uint8_t& val0, const uint8_t& val1):
     p0(pin0), p1(pin1), v0(val0), v1(val1)
   {
     pinMode(p0, OUTPUT);
@@ -185,7 +253,6 @@ public:
         
     }
     refresh();
-   
   }
   
   void seeSaw(bool& curHi, uint8_t incr = 1){
@@ -199,14 +266,14 @@ public:
       }
 
       // switch directions
-      if (!v0 || !v1)
+      if (v0 == 0 || v1 == 0)
         curHi = !curHi;
         
     }
-    
+        
     refresh();
   }
   
 };
-
+*/
 #endif
