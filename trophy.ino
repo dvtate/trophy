@@ -13,22 +13,34 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 //hardware
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-TriLED rgb0(13,12,11,Color(255,0,0));
 
-BiLED flasher(6, 5, 255, 0);
+
+TriLED rgbs[2] {
+  TriLED(13, 12, 11, Color(255, 0, 0));
+  TriLED(10, 9, 8, Color(255, 0, 0));
+};
+
+const& TriLED rgb0 = rgbs[0], rgb1 = rgbs[1];
+
+
+BiLED redBlues[2][2]{
+  BiLED(A0, A1), BiLED(A2, A3),
+  BiLED(A4, A5), BiLED(A6, A7)
+};
+
 
 // the ultrasonic sensor / user interface
-Ultrasonic sonar(7);
+Ultrasonic sonar(52);
 
 
 // buzzer
-#define BUZZPIN 3
+#define BUZZPIN 27
 
 // audio toggle
-PushButton buzzButton(2);
+PushButton buzzButton(23);
 
 // audio indicator
-#define BUZZLEDPIN 9
+#define BUZZLEDPIN 22
 bool audioEnabled = true;
 
 
