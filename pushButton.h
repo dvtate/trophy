@@ -5,7 +5,7 @@
 
 class PushButton {
 public:
-  uint8_t pin;
+  unsigned char pin : 7;
   bool value;
 
   PushButton(uint8_t _pin):
