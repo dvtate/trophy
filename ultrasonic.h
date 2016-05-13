@@ -6,7 +6,7 @@
 class Ultrasonic {
 
 public:
-  uint8_t pin; //the SIG pin
+  unsigned char pin : 7; //the SIG pin
   uint16_t duration;// the Pulse time received;
     
   Ultrasonic(int _pin): pin(_pin){}
