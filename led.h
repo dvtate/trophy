@@ -42,6 +42,12 @@ public:
   void set()
     { setColor(); }
 
+  void set(const uint8_t& val){
+    color.r = val;
+    color.g = val;
+    color.b = val;
+    refresh();
+  }
   void set(const uint8_t& r, const uint8_t& g, const uint8_t& b){
     color.r = r;
     color.g = g;
@@ -101,7 +107,7 @@ public:
     while (incr-- > 0)
       color::cycle3(c1, c2, c3, curHi);
 
-    /* for debugging only (uses too much resources)
+    // for debugging only (uses too much resources)
      Serial.print("r:");
      Serial.print(color.r, DEC);
      Serial.print(" g:");
@@ -110,7 +116,6 @@ public:
      Serial.print(color.b, DEC);
      Serial.print(" CurHi: ");
      Serial.println(curHi, DEC);
-   */
 
     setColor();
     
@@ -145,7 +150,7 @@ public:
     
     setColor();
   }
-  
+    
 };
 
 // tri-color RGB LED class
@@ -194,7 +199,14 @@ public:
     b = blue;
     setColor(); // write/apply changes
   }
-    
+  
+  void set(const bool& val){
+    r = val;
+    g = val;
+    b = val;
+    refresh();
+  }
+  
   void refresh(){
     digitalWrite(pr, r);
     digitalWrite(pg, g);
