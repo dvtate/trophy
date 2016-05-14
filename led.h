@@ -58,9 +58,9 @@ public:
   
   // sets output to zero without clearing the values
   void off(){
-    analogWrite(pr, 0);
-    analogWrite(pg, 0);
-    analogWrite(pb, 0);
+    digitalWrite(pr, 0);
+    digitalWrite(pg, 0);
+    digitalWrite(pb, 0);
   }
   
   Color& getColor()
