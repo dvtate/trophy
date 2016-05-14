@@ -7,11 +7,11 @@
 #include "color.h"
 
 
-// tri-color RGB LED class
+// tri-color pwm RGB LED class
 class TriLED {
 public:
   Color color;
-  uint8_t pr:7, pg:7, pb:7;
+  unsigned char pr:7, pg:7, pb:7;
   
   TriLED(const uint8_t& redPin, const uint8_t& greenPin, const uint8_t& bluePin):
     pr(redPin), pg(greenPin), pb(bluePin), color(0,0,0) 
@@ -148,9 +148,202 @@ public:
   
 };
 
+// tri-color RGB LED class
+class DigitalTriLED {
+public:
+  bool r : 1, g : 1, b : 1;
+  unsigned char pr : 7, pg : 7, pb : 7;
+  
+  DigitalTriLED(const uint8_t& redPin, const uint8_t& greenPin, const uint8_t& bluePin):
+    pr(redPin), pg(greenPin), pb(bluePin), r(LOW), g(LOW), b(LOW) 
+  {
+    pinMode(pr, OUTPUT);
+    pinMode(pg, OUTPUT);
+    pinMode(pb, OUTPUT);
+  }
+  
+  DigitalTriLED(const uint8_t& redPin, const uint8_t& greenPin, const uint8_t& bluePin, Color _clr):
+    pr(redPin), pg(greenPin), pb(bluePin), r(_clr.r), g(_clr.g), b(_clr.b) 
+  {
+    pinMode(pr, OUTPUT);
+    pinMode(pg, OUTPUT);
+    pinMode(pb, OUTPUT);
+  }
+  void setColor(const bool& red, const bool& green, const bool& blue){
+    set(red, green, blue);
+    refresh();
+  }
+  void setColor(const Color& clr){
+    r = clr.r;
+    g = clr.g;
+    b = clr.b;
+    refresh();
+  }
+  
+  void setColor()
+    { refresh(); }
+
+  void set(const Color& clr)
+    { setColor(clr); }
+  void set()
+    { setColor(); }
+
+  void set(const bool& red, const bool& green, const bool& blue){
+    r = red;
+    g = green;
+    b = blue;
+    setColor(); // write/apply changes
+  }
+    
+  void refresh(){
+    digitalWrite(pr, r);
+    digitalWrite(pg, g);
+    digitalWrite(pb, b);
+  }
+
+  
+  // sets output to zero without clearing the values
+  void off(){
+    digitalWrite(pr, 0);
+    digitalWrite(pg, 0);
+    digitalWrite(pb, 0);
+  }
+  
+  void colorCycle(char order[4]){
+    char curHi = r ? 
+        'r' : g ? 
+          'g' : b? 
+            'b': *order;
+
+    
+    uint8_t i = 0;
+    while (curHi != *(order + i) && i < 4)
+      i++;
+    
+    curHi = (i < 3) ? *(order + i) : *order;
+
+    switch (curHi) {
+    case 'r':
+      r = HIGH;
+      g = LOW;
+      b = LOW;
+      refresh();
+      break;
+      
+    case 'g':
+      r = LOW;
+      g = HIGH;
+      b = LOW;
+      refresh();
+      break;
+      
+    case 'b':
+      r = LOW;
+      g = LOW;
+      b = HIGH;
+      refresh();
+      break;  
+      
+    }
+    
+    setColor();
+    
+  }
+
+  void colorCycle(char* order, uint8_t len){
+    char curHi = r ?
+        'r' : g ? 
+          'g' : b? 
+            'b': *order;
+
+    
+    uint8_t i = 0;
+    while (curHi != *(order + i) && i < len)
+      i++;
+    
+    curHi = (i < len) ? *(order + i) : *order;
+
+    switch (curHi) {
+    case 'r':
+      r = HIGH;
+      g = LOW;
+      b = LOW;
+      refresh();
+      break;
+      
+    case 'g':
+      r = LOW;
+      g = HIGH;
+      b = LOW;
+      refresh();
+      break;
+      
+    case 'b':
+      r = LOW;
+      g = LOW;
+      b = HIGH;
+      refresh();
+      break;  
+      
+    }
+    
+    setColor();
+    
+  }
+
+  void colorCycle(){
+    
+    char nextHi = g ? 'b' : ( b? 'r': 'g');
+
+    switch (nextHi) {
+    case 'r':
+      r = HIGH;
+      g = LOW;
+      b = LOW;
+      refresh();
+      break;
+      
+    case 'g':
+      r = LOW;
+      g = HIGH;
+      b = LOW;
+      refresh();
+      break;
+      
+    case 'b':
+      r = LOW;
+      g = LOW;
+      b = HIGH;
+      refresh();
+      break;  
+      
+    }
+
+    
+  }
+
+  // this will never get used...
+  void swapPins(const uint8_t& redPin, const uint8_t& bluePin, const uint8_t& greenPin){
+    pr = redPin;
+    pg = greenPin;
+    pb = bluePin;
+    // set them as output
+    pinMode(pr, OUTPUT);
+    pinMode(pg, OUTPUT);
+    pinMode(pb, OUTPUT);
+    
+    setColor();
+  }
+  
+};
+
+
+
+// will no longer get used...
+
 class BiLED { // digital
 public:
-  unsigned short int p0:7, p1:7;
+  unsigned char p0:7, p1:7;
   bool v0:1, v1:1; // could be replaced by uint8_t for PWM output
   
   BiLED(const uint8_t& pin0, const uint8_t& pin1):
@@ -194,6 +387,8 @@ public:
     refresh();
   }
 };
+
+
 /*
 class BiLED_pwm {
 public:
