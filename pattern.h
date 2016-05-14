@@ -3,10 +3,11 @@
 
 #include "patterns.h"
 
-#define NUMBER_OF_PATTERNS 3
 
 uint8_t patternNumber = 0;
 
+extern bool checkInput();
+extern void soundCheck();
 
 
 namespace patterns_common {
@@ -21,18 +22,6 @@ namespace patterns_common {
 
 
 
-// choose a different pattern
-void pickNextPattern(){
-
-  if (patternNumber < (NUMBER_OF_PATTERNS - 1))
-    patternNumber++;
-  else
-    patternNumber = 0;
-
-
-
-}
-
 #define CALL_PATTERN(N) \
   if (!N::initialized) {\
         patterns_common::uninitializeAll();\
@@ -43,7 +32,7 @@ void pickNextPattern(){
   }
 
 
-void callPattern(uint8_t patNum){
+inline void callPattern(const uint8_t& patNum){
   switch (patNum) {
   case 0:
     CALL_PATTERN(pattern0);
@@ -62,7 +51,7 @@ void callPattern(uint8_t patNum){
   patterns_common::uninitializeAll();
   
 
-void endPattern(uint8_t patNum){
+inline void endPattern(const uint8_t& patNum){
   switch (patNum) {
   case 0:
     KILL_PATTERN(pattern0);
@@ -74,6 +63,22 @@ void endPattern(uint8_t patNum){
     KILL_PATTERN(pattern2);
     break;
   }
+}
+
+
+
+// choose a different pattern
+void pickNextPattern(){
+
+  endPattern(patternNumber);
+
+  if (patternNumber < (NUMBER_OF_PATTERNS - 1))
+    patternNumber++;
+  else
+    patternNumber = 0;
+
+
+
 }
 
 
