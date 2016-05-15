@@ -54,7 +54,8 @@ public:
     color.b = b;
     setColor(); // write/apply changes
   }
-    
+
+
   void refresh(){
     analogWrite(pr, color.r);
     analogWrite(pg, color.g);
@@ -68,45 +69,48 @@ public:
     digitalWrite(pg, 0);
     digitalWrite(pb, 0);
   }
+  void setNull()
+    { color = Color(0, 0, 0); }
   
   Color& getColor()
     { return color; }
 
-  void colorCycle(const char* order, uint8_t incr = 1){
+  void colorCycle(const char order[4], uint8_t incr = 1){
 
-    // this isn't easy...
+    // this is glitchy...
     uint8_t &c1 = color.r, &c2 = color.g, &c3 = color.b;
 
     if (*order == 'r')
-    c1 = color.r;
+      c1 = color.r;
     else if (*order == 'g')
-    c1 = color.g;
+      c1 = color.g;
     else if (*order == 'b')
-    c1 = color.b;
+      c1 = color.b;
     
     order++; //next char
     
     if (*order == 'r')
-    c2 = color.r;
+      c2 = color.r;
     else if (*order == 'g')
-    c2 = color.g;
+      c2 = color.g;
     else if (*order == 'b')
-    c2 = color.b;
+      c2 = color.b;
     
     order++; //next char
     
     if (*order == 'r')
-    c3 = color.r;
+      c3 = color.r;
     else if (*order == 'g')
-    c3 = color.g;
+      c3 = color.g;
     else if (*order == 'b')
-    c3 = color.b;
+      c3 = color.b;
     
     static uint8_t curHi = 0;
     
     while (incr-- > 0)
       color::cycle3(c1, c2, c3, curHi);
 
+    /*
     // for debugging only (uses too much resources)
      Serial.print("r:");
      Serial.print(color.r, DEC);
@@ -116,11 +120,58 @@ public:
      Serial.print(color.b, DEC);
      Serial.print(" CurHi: ");
      Serial.println(curHi, DEC);
-
+    */
     setColor();
     
   }
+  
+  void colorCycle(const char order[4], uint8_t& curHi, uint8_t incr = 1){
 
+    // this is glitchy...
+    uint8_t &c1 = color.r, &c2 = color.g, &c3 = color.b;
+
+    if (*order == 'r')
+      c1 = color.r;
+    else if (*order == 'g')
+      c1 = color.g;
+    else if (*order == 'b')
+      c1 = color.b;
+    
+    order++; //next char
+    
+    if (*order == 'r')
+      c2 = color.r;
+    else if (*order == 'g')
+      c2 = color.g;
+    else if (*order == 'b')
+      c2 = color.b;
+    
+    order++; //next char
+    
+    if (*order == 'r')
+      c3 = color.r;
+    else if (*order == 'g')
+      c3 = color.g;
+    else if (*order == 'b')
+      c3 = color.b;
+    
+    while (incr-- > 0)
+      color::cycle3(c1, c2, c3, curHi);
+
+    /*
+    // for debugging only (uses too much resources)
+     Serial.print("r:");
+     Serial.print(color.r, DEC);
+     Serial.print(" g:");
+     Serial.print(color.g, DEC);
+     Serial.print(" b:");
+     Serial.print(color.b, DEC);
+     Serial.print(" CurHi: ");
+     Serial.println(curHi, DEC);
+    */
+    setColor();
+    
+  }
   void colorCycle(uint8_t incr = 1){
     
     static uint8_t curHi = 0;
@@ -220,6 +271,11 @@ public:
     digitalWrite(pg, 0);
     digitalWrite(pb, 0);
   }
+  void setNull(){
+    r = 0;
+    g = 0;
+    b = 0;
+  }
   
   void colorCycle(char order[4]){
     char curHi = r ? 
@@ -229,8 +285,10 @@ public:
 
     
     uint8_t i = 0;
-    while (curHi != *(order + i) && i < 4)
+    while (curHi != *(order + i) && i <= 4)
       i++;
+    
+    i++;
     
     curHi = (i < 3) ? *(order + i) : *order;
 
@@ -272,7 +330,7 @@ public:
     uint8_t i = 0;
     while (curHi != *(order + i) && i < len)
       i++;
-    
+    i++;
     curHi = (i < len) ? *(order + i) : *order;
 
     switch (curHi) {
@@ -327,11 +385,9 @@ public:
       g = LOW;
       b = HIGH;
       refresh();
-      break;  
-      
+      break;
     }
 
-    
   }
 
   // this will never get used...
@@ -401,7 +457,6 @@ public:
 };
 
 
-/*
 class BiLED_pwm {
 public:
   uint8_t p0, p1;
@@ -448,15 +503,16 @@ public:
     static bool curHi = 0;
     
     while (incr-- > 0) {
-    
+
+      if (!v0 || !v1)
+        curHi = !curHi;
       if (!curHi) {
         v0--; v1++;
       } else {
         v1--; v0++;
       }
       
-      if (!v0 || !v1)
-        curHi = !curHi;
+
         
     }
     refresh();
@@ -465,22 +521,25 @@ public:
   void seeSaw(bool& curHi, uint8_t incr = 1){
   
     while (incr-- > 0) {
+
       
+      // switch directions
+      if (v0 == 0 || v1 == 0)
+        curHi = !curHi;
+        
       if (!curHi) {
         v0--; v1++;
       } else {
         v1--; v0++;
       }
 
-      // switch directions
-      if (v0 == 0 || v1 == 0)
-        curHi = !curHi;
         
     }
-        
+
     refresh();
   }
   
 };
-*/
+
+
 #endif
