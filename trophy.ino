@@ -49,40 +49,40 @@ bool audioEnabled = true;
 
 
 
-inline void resetLEDs(){
+void resetLEDs(){
   top[0].set(0);
   top[1].set(0);
-  
+
   base[0][0].set(0);
   base[0][1].set(0);
   base[1][0].set(0);
   base[1][1].set(0);
-  
 }
+
 inline void refreshLEDs(){
   top[0].refresh();
   top[1].refresh();
-  
+
   base[0][0].refresh();
   base[0][1].refresh();
   base[1][0].refresh();
   base[1][1].refresh();
 }
 
-inline void setLEDsValsZero(){
+void setLEDsValsZero(){
   top[0].setNull();
   top[1].setNull();
-  
+
   base[0][0].setNull();
   base[0][1].setNull();
   base[1][0].setNull();
   base[1][1].setNull();
 }
 
+
+// patterns code:
 #include "patterns.h" // the definitions for the patterns
 #include "pattern.h" // the common functions for patterns
-
-
 
 
 // returns true when it's time to switch patterns
@@ -128,8 +128,6 @@ void loop(){
 
   
 }
-
-
 
 
 
