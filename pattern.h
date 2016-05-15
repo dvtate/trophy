@@ -46,29 +46,28 @@ inline void callPattern(const uint8_t& patNum){
   }
 }
 
-#define KILL_PATTERN(N)\
-  N::disable();\
-  patterns_common::uninitializeAll();
-  
 
 inline void endPattern(const uint8_t& patNum){
   switch (patNum) {
   case 0:
-    KILL_PATTERN(pattern0);
+    pattern0::disable();
     break;
   case 1:
-    KILL_PATTERN(pattern1);
+    pattern1::disable();
     break;
   case 2:
-    KILL_PATTERN(pattern2);
+    pattern2::disable();
     break;
   }
+  
+  patterns_common::uninitializeAll();
+  resetLEDs();
 }
 
 
 
 // choose a different pattern
-void pickNextPattern(){
+inline void pickNextPattern(){
 
   endPattern(patternNumber);
 
