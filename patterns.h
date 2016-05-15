@@ -1,187 +1,225 @@
 #ifndef PATTERNS_H
 #define PATTERNS_H
 
+
+
 // prototype functions to prevent errors
 // these functions get defined later in the file
 extern bool checkInput();
-extern void nextPattern();
+extern void pickNextPattern();
 extern void soundCheck();
 extern void resetLEDs();
 extern void refreshLEDs();
 
+#define NUMBER_OF_PATTERNS 3
 
-// a namespace filled with functions which are called to make the trophy light up and stuff
-namespace lightPatterns {
-  
-  bool initialized[3] {false, false, false};
+namespace examplePattern {
+  bool initialized = false; // required
 
-  
-  // the pattern that gets replaced by other patterns
-  void initial(){
-
-    rgb0.colorCycle(4);
-    rgb1.colorCycle(4);
-
-    static uint8_t cycles = 0;
-    
-    for (unsigned char i = 0; i < 4; i++)
-      if (!cycles++) {
-        redBlues[0][0].swap();
-        redBlues[0][1].swap();
-        redBlues[1][0].swap();
-        redBlues[1][1].swap();
-      }
-
-
-    // must be called periodically 
-    soundCheck(); // should be called before checkInput();
-    if (checkInput()) return;
+  // called once before periodic begins
+  void init (){
     
   }
 
-  void pattern0(){
+  // cycled, continuously run
+  void periodic(){
 
-    // reset from previous pattern... (run once)
-    static bool initialized = false;
-    if (!initialized[0]) {
-      initialized = true;
-      
-      resetLEDs();
-      
-      rgb0.color.g = 255;
-      rgb1.color.g = 0;
-      
-    }
-
-    rgb1.colorCycle();
-
-    static bool curHi = 0;
-    color::cycle2(rgb0.color.g, rgb1.color.g, curHi);
+    // these must be called at least once.
+    soundCheck(); // verify sound and input agree
+    if(checkInput()) return;
 
     
-    static uint8_t cycles = 0, activeLED0 = 0, activeLED1 = 0;
-
-    
-    // cycle
-    for (unsigned char i = 0; i < 4; i++)
-      if (!cycles++) {
-        if (activeLED0 == 5)
-          activeLED0 = 0;
-        else
-          activeLED0++;
-
-        if (activeLED1 == 5)
-          activeLED1 = 0;
-        else
-          activeLED1++;
-        
-      }
-    // cycle the blues    
-    switch (activeLED0) {
-    case 0: 
-      redBlues[0][0].v1 = !redBlues[0][0].v1;
-      break;
-
-    case 1: 
-      redBlues[0][1].v1 = !redBlues[0][1].v1;
-      break;
-
-    case 2:
-      rgb1.color.b = rgb1.color.b ? 0 : 255;
-      break;
-      
-    case 3:
-      rgb0.color.b = rgb0.color.b ? 0 : 255;
-      break;
-      
-    case 4: 
-      redBlues[1][1].v1 = !redBlues[1][1].v1;
-      break;
-
-    case 5: 
-      redBlues[1][0].v1 = !redBlues[1][0].v1;
-      break;
-
-    }
-
-    // cycle the reds
-    switch (activeLED1) {
-    case 5: 
-      redBlues[0][0].v0 = !redBlues[0][0].v0;
-      break;
-
-    case 4: 
-      redBlues[0][1].v0 = !redBlues[0][1].v0;
-      break;
-
-    case 3:
-      rgb1.color.r = rgb1.color.r ? 0 : 255;
-      break;
-      
-    case 2:
-      rgb0.color.r = rgb0.color.r ? 0 : 255;
-      break;
-      
-    case 1: 
-      redBlues[1][1].v0 = !redBlues[1][1].v0;
-      break;
-
-    case 0: 
-      redBlues[1][0].v0 = !redBlues[1][0].v0;
-      break;
-
-    }
-
-    
-
-    refreshLEDs();
-
-    
-    // should get called periodically
-    if (checkInput()) return;
-    //soundCheck();
-  }
-  
-  void pattern1(){
-    
-    // reset from previous pattern... (run once)
-    static bool initialized = false;
-    if (!initialized) {
-      resetLEDs();
-      initialized = true;
-    }
-    
-    rgb0.setColor(Color(0, 255, 0)); //for now this is it...
-
-    
-    // should get called periodically
-    soundCheck();
-    if (checkInput()) return;
     
   }
   
-  void pattern2(){
+  // called before ending this pattern
+  void disable(){
     
-    // reset from previous pattern... (run once)
-    static bool initialized = false;
-    if (!initialized) {
-      resetLEDs();
-      initialized = true;
-    }
-    
-    // pattern code goes here...
-    rgb0.setColor(Color(0, 0, 255)); //for now this is it...
-
-    
-    // should get called periodically
-    soundCheck();
-    if (checkInput()) return;
   }
   
 }
 
-// so far only 3 light patterns
-#define NUMBER_OF_PATTERNS 3
 
+namespace pattern0 {
+  bool initialized = false;
+
+  // local variables
+  uint8_t cycles = 0, curHi = 0;
+  
+  void init(){
+    cycles = 0;
+    curHi = 0;
+    top[0].set(Color(255, 0, 0));
+    top[1].set(Color(255, 0, 0));
+    base[0][0].set(255, 0, 0);
+    base[0][1].set(255, 0, 0);
+    base[1][0].set(255, 0, 0);
+    base[1][1].set(255, 0, 0);
+
+  }
+
+  void periodic(){
+    soundCheck(); // should be called before checkInput();
+    if (checkInput()) return;
+
+
+    color::cycle3(top[0].color.r, top[0].color.g, top[0].color.b, curHi);
+    color::cycle3(top[1].color.r, top[1].color.g, top[1].color.b, curHi);
+
+    
+    
+  //    top[1].colorCycle(curHi, 4);
+
+    top[0].refresh();
+    top[1].refresh();
+    
+    for (unsigned char i = 0; i < 4; i++)
+      if (!cycles++) {
+        base[0][0].colorCycle("rgb");
+        base[0][1].colorCycle("rgb");
+        base[1][0].colorCycle("rgb");
+        base[1][1].colorCycle("rgb");
+      }
+
+   
+
+  }
+
+  void disable(){
+    
+  }
+};
+
+
+
+namespace pattern1 {
+  bool initialized = false;
+
+  // local variables
+  bool curHi = 0;
+  uint8_t cycles = 0, 
+          activeLEDr = 0, 
+          activeLEDb = 0, 
+          activeLEDg = 0;
+
+  
+  void init(){
+
+    resetLEDs();
+    top[0].color.g = 0;
+    top[1].color.g = 255;
+
+    activeLEDr = activeLEDb = activeLEDg = 0;
+    
+    curHi = 0;
+
+    cycles = 1;
+  }
+  
+  // a local function
+  inline void setLEDsValsZero(){
+    top[0].color.r = 0;
+    top[0].color.b = 0;
+    top[1].color.r = 0;
+    top[1].color.b = 0;
+    
+    base[0][0].setNull();
+    base[0][1].setNull();
+    base[1][0].setNull();
+    base[1][1].setNull();
+  }
+
+  void periodic(){
+    soundCheck();
+    if (checkInput()) return;
+
+
+    color::cycle2(top[0].color.g, top[1].color.g, curHi, 4);
+
+    // cycle
+    //for (unsigned char i = 0; i < 4; i++)
+      if ((cycles++) == 0) {
+        if (activeLEDr == 5)
+          activeLEDr = 0;
+        else
+          activeLEDr++;
+
+        if (activeLEDb == 5)
+          activeLEDb = 0;
+        else
+          activeLEDb++;
+
+        if (activeLEDg == 3)
+          activeLEDg = 0;
+        else
+          activeLEDg++;
+      }
+
+
+    setLEDsValsZero();
+    
+    // blues:    
+    switch (activeLEDb) {
+      case 0: base[0][0].b = HIGH; break;
+      case 1: base[0][1].b = HIGH; break;
+      case 2: top[1].color.b = 255; break;      
+      case 3: top[0].color.b = 255; break;      
+      case 4: base[1][1].b = HIGH; break;
+      case 5: base[1][0].b = HIGH; break;
+    }
+
+    // reds:
+    switch (activeLEDb) {
+      case 5: base[0][0].r = HIGH; break;
+      case 4: base[0][1].r = HIGH; break;
+      case 3: top[1].color.r = 255; break;
+      case 2: top[0].color.r = 255; break;
+      case 1: base[1][1].r = HIGH; break;
+      case 0: base[1][0].r = HIGH; break;
+    }
+
+    // greens:
+    switch (activeLEDg) {
+      case 1: base[0][0].g = HIGH; break;
+      case 0: base[0][1].g = HIGH; break;
+      case 2: base[1][1].g = HIGH; break;
+      case 3: base[1][0].g = HIGH; break;
+    }
+    
+    refreshLEDs();
+    
+  }
+
+  void disable(){}
+};
+
+
+
+namespace pattern2 {
+  bool initialized = false;
+
+  // local variables
+  static uint8_t cycles = 0;
+  
+  void init(){
+    top[0].set(Color(0, 0, 255));
+    top[1].set(Color(0, 0, 255));
+    base[0][0].set(0, 0, 255);
+    base[0][1].set(0, 0, 255);
+    base[1][0].set(0, 0, 255);
+    base[1][1].set(0, 0, 255);
+
+  }
+
+  void periodic(){
+    soundCheck(); 
+    if (checkInput()) return;
+
+  }
+
+  void disable(){}
+};
 
 #endif
+
+
