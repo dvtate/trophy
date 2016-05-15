@@ -22,10 +22,10 @@ TriLED top[2] {
 
 TriLED& top0 = top[0], top1 = top[1];
 
-
+// pretend its like a coordinate plane...
 DigitalTriLED base[2][2]{
-  DigitalTriLED(48, 49, 50), DigitalTriLED(46,47,51),
-  DigitalTriLED(44, 45, 52), DigitalTriLED(42, 43, 53)
+  DigitalTriLED(47, 46, 51), DigitalTriLED(42, 43, 52),
+  DigitalTriLED(49, 48, 50), DigitalTriLED(45, 44, 53),
 };
 
 
@@ -48,20 +48,15 @@ bool audioEnabled = true;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-#include "patterns.h" // the definitions for the patterns
-#include "pattern.h" // the common functions for patterns
-
-
-
 
 inline void resetLEDs(){
-  top[0].set(Color(0,0,0));
-  top[1].set(Color(0,0,0));
+  top[0].set(0);
+  top[1].set(0);
   
-  base[0][0].set(0, 0, 0);
-  base[0][1].set(0, 0, 0);
-  base[1][0].set(0, 0, 0);
-  base[1][1].set(0, 0, 0);
+  base[0][0].set(0);
+  base[0][1].set(0);
+  base[1][0].set(0);
+  base[1][1].set(0);
   
 }
 inline void refreshLEDs(){
@@ -73,6 +68,19 @@ inline void refreshLEDs(){
   base[1][0].refresh();
   base[1][1].refresh();
 }
+
+inline void setLEDsValsZero(){
+  top[0].setNull();
+  top[1].setNull();
+  
+  base[0][0].setNull();
+  base[0][1].setNull();
+  base[1][0].setNull();
+  base[1][1].setNull();
+}
+
+#include "patterns.h" // the definitions for the patterns
+#include "pattern.h" // the common functions for patterns
 
 
 
@@ -88,7 +96,7 @@ bool checkInput(){
     pickNextPattern();
 
     if (audioEnabled) // ring 150Hz Square tone for 10ms
-      tone(BUZZPIN, 150, 10); 
+      tone(BUZZPIN, 150, 50); 
     
     return true;
   }
@@ -104,6 +112,10 @@ void soundCheck(){
 
 void setup(){
 
+  //Serial.begin(9600);
+  
+  resetLEDs(); //set all leds to 0
+
  
   // disable pull-up resistor
   pinMode(BUZZLEDPIN, OUTPUT);
@@ -112,13 +124,12 @@ void setup(){
 
 void loop(){
 
+  callPattern(patternNumber);
 
-
-  delay(5);
-
-  /*
-  Serial.print("Dist =");
-  Serial.print(sonar.getCm()); //0~400cm (796 = timeout)
-  Serial.println(" cm");
-  */
+  
 }
+
+
+
+
+
