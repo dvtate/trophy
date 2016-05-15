@@ -63,23 +63,21 @@ namespace pattern0 {
     soundCheck(); // should be called before checkInput();
     if (checkInput()) return;
 
-
+    // I should use the color cycle member function...
     color::cycle3(top[0].color.r, top[0].color.g, top[0].color.b, curHi);
     color::cycle3(top[1].color.r, top[1].color.g, top[1].color.b, curHi);
-
-    
-    
-  //    top[1].colorCycle(curHi, 4);
+   
 
     top[0].refresh();
     top[1].refresh();
-    
-    for (unsigned char i = 0; i < 4; i++)
-      if (!cycles++) {
-        base[0][0].colorCycle("rgb");
-        base[0][1].colorCycle("rgb");
-        base[1][0].colorCycle("rgb");
-        base[1][1].colorCycle("rgb");
+
+    // every 255/4 = 63.75 cycles switch color
+    for (uint8_t i = 0; i < 4; i++)
+      if ( ( cycles++ ) == 0 ) {
+        base[0][0].colorCycle("rgb"); // boolean types don't need a static curHi
+        base[0][1].colorCycle("rgb"); //  a static curHi
+        base[1][0].colorCycle("rgb"); // this is good...
+        base[1][1].colorCycle("rgb"); 
       }
 
    
@@ -140,16 +138,20 @@ namespace pattern1 {
     // cycle
     //for (unsigned char i = 0; i < 4; i++)
       if ((cycles++) == 0) {
+        
+        // the reds
         if (activeLEDr == 5)
           activeLEDr = 0;
         else
           activeLEDr++;
 
+        //the blues...
         if (activeLEDb == 5)
           activeLEDb = 0;
         else
           activeLEDb++;
 
+        // the greens :D
         if (activeLEDg == 3)
           activeLEDg = 0;
         else
