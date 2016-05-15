@@ -34,6 +34,7 @@ namespace examplePattern {
   
   // called before ending this pattern
   void disable(){
+
     
   }
   
@@ -180,8 +181,8 @@ namespace pattern1 {
 
     // greens:
     switch (activeLEDg) {
-      case 1: base[0][0].g = HIGH; break;
-      case 0: base[0][1].g = HIGH; break;
+      case 0: base[0][0].g = HIGH; break;
+      case 1: base[0][1].g = HIGH; break;
       case 2: base[1][1].g = HIGH; break;
       case 3: base[1][0].g = HIGH; break;
     }
@@ -221,5 +222,3 @@ namespace pattern2 {
 };
 
 #endif
-
-
