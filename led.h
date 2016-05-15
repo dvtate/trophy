@@ -313,7 +313,6 @@ public:
       b = HIGH;
       refresh();
       break;  
-      
     }
     
     setColor();
@@ -511,9 +510,7 @@ public:
       } else {
         v1--; v0++;
       }
-      
 
-        
     }
     refresh();
   }
@@ -522,7 +519,6 @@ public:
   
     while (incr-- > 0) {
 
-      
       // switch directions
       if (v0 == 0 || v1 == 0)
         curHi = !curHi;
@@ -532,7 +528,6 @@ public:
       } else {
         v1--; v0++;
       }
-
         
     }
 
