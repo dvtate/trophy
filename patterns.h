@@ -48,6 +48,11 @@ namespace pattern0 {
   uint8_t cycles = 0, curHi = 0;
   
   void init(){
+    
+    resetLEDs();
+    soundCheck();
+    if (checkInput()) return;
+    
     cycles = 0;
     curHi = 0;
     top[0].set(Color(255, 0, 0));
@@ -105,6 +110,9 @@ namespace pattern1 {
   void init(){
 
     resetLEDs();
+    soundCheck();
+    if (checkInput()) return;
+    
     top[0].color.g = 0;
     top[1].color.g = 255;
 
@@ -205,6 +213,11 @@ namespace pattern2 {
   static uint8_t cycles = 0;
   
   void init(){
+    
+    resetLEDs();
+    soundCheck();
+    if (checkInput()) return;
+    
     top[0].set(Color(0, 0, 255));
     top[1].set(Color(0, 0, 255));
     base[0][0].set(0, 0, 255);
