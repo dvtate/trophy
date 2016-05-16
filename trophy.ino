@@ -50,13 +50,22 @@ bool audioEnabled = true;
 
 
 void resetLEDs(){
-  top[0].set(0);
-  top[1].set(0);
+  top[0].set(LOW);
+  top[1].set(LOW);
 
-  base[0][0].set(0);
-  base[0][1].set(0);
-  base[1][0].set(0);
-  base[1][1].set(0);
+  base[0][0].set(LOW);
+  base[0][1].set(LOW);
+  base[1][0].set(LOW);
+  base[1][1].set(LOW);
+}
+void setLEDsHigh(){
+  top[0].set(255);
+  top[1].set(255);
+
+  base[0][0].set(HIGH);
+  base[0][1].set(HIGH);
+  base[1][0].set(HIGH);
+  base[1][1].set(HIGH);
 }
 
 inline void refreshLEDs(){
@@ -79,11 +88,35 @@ void setLEDsValsZero(){
   base[1][1].setNull();
 }
 
+// needed because my dumb ass bought common anode instead of common cathode LEDs
+inline void invertLEDs(){
+  top[0].color.invert();
+  top[1].color.invert();
+
+  base[0][0].invert();
+  base[0][1].invert();
+  base[1][0].invert();
+  base[1][1].invert();
+  refreshLEDs();
+}
 
 // patterns code:
 #include "patterns.h" // the definitions for the patterns
 #include "pattern.h" // the common functions for patterns
 
+
+
+void theremin(){
+  uint16_t resp = 0;
+  bool state = LOW;
+  while ((resp = sonar.getMicroseconds() ) < 4000 && resp != 0) { 
+    digitalWrite(BUZZPIN, state);
+    state = !state;
+    //delayMicroseconds(resp);
+    pickNextPattern();
+  }
+  digitalWrite(BUZZPIN, LOW);
+}
 
 // returns true when it's time to switch patterns
 bool checkInput(){
@@ -96,8 +129,8 @@ bool checkInput(){
     pickNextPattern();
 
     if (audioEnabled) // ring 150Hz Square tone for 10ms
-      tone(BUZZPIN, 150, 50); 
-    
+      theremin();//tone(BUZZPIN, 150, 50); 
+      
     return true;
   }
   previous = sonar.getCm() < 20;
@@ -112,20 +145,22 @@ void soundCheck(){
 
 void setup(){
 
-  //Serial.begin(9600);
+  Serial.begin(9600);
   
   resetLEDs(); //set all leds to 0
 
  
   // disable pull-up resistor
   pinMode(BUZZLEDPIN, OUTPUT);
+  pinMode(BUZZPIN, OUTPUT);
 
 }
 
 void loop(){
 
-  callPattern(patternNumber);
 
+  // so simple 
+  callPattern(patternNumber);
   
 }
 
