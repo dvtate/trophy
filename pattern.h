@@ -24,9 +24,9 @@ namespace patterns_common {
 
 #define CALL_PATTERN(N) \
   if (!N::initialized) {\
-        patterns_common::uninitializeAll();\
-        N::initialized = true;\
-        N::init();\
+    patterns_common::uninitializeAll();\
+    N::initialized = true;\
+    N::init();\
   } else {\
     N::periodic();\ 
   }
