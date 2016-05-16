@@ -5,11 +5,11 @@
 
 // prototype functions to prevent errors
 // these functions get defined later in the file
-extern bool checkInput();
-extern void pickNextPattern();
-extern void soundCheck();
-extern void resetLEDs();
-extern void refreshLEDs();
+extern bool checkInput(void);
+extern void pickNextPattern(void);
+extern void soundCheck(void);
+extern void resetLEDs(void);
+extern void refreshLEDs(void);
 
 #define NUMBER_OF_PATTERNS 3
 
@@ -92,8 +92,7 @@ namespace pattern0 {
   void disable(){
     
   }
-};
-
+}
 
 
 namespace pattern1 {
@@ -102,7 +101,6 @@ namespace pattern1 {
   // local variables
   bool curHi = 0;
   uint8_t cycles = 0, 
-          activeLEDr = 0, 
           activeLEDb = 0, 
           activeLEDg = 0;
 
@@ -116,7 +114,7 @@ namespace pattern1 {
     top[0].color.g = 0;
     top[1].color.g = 255;
 
-    activeLEDr = activeLEDb = activeLEDg = 0;
+    activeLEDb = activeLEDg = 0;
     
     curHi = 0;
 
@@ -146,12 +144,6 @@ namespace pattern1 {
     // cycle
     //for (unsigned char i = 0; i < 4; i++)
       if ((cycles++) == 0) {
-        
-        // the reds
-        if (activeLEDr == 5)
-          activeLEDr = 0;
-        else
-          activeLEDr++;
 
         //the blues...
         if (activeLEDb == 5)
@@ -202,7 +194,7 @@ namespace pattern1 {
   }
 
   void disable(){}
-};
+}
 
 
 
@@ -234,6 +226,6 @@ namespace pattern2 {
   }
 
   void disable(){}
-};
+}
 
 #endif
