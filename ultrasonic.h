@@ -44,6 +44,20 @@ public:
     return pulseIn(pin, HIGH, 1160); // returns 0 if >20cm
     
   }
+  uint16_t getMicroseconds(){
+    // produce a pulse
+    pinMode(pin, OUTPUT);
+    digitalWrite(pin, LOW);
+    delayMicroseconds(2); //thats a delay!!
+    digitalWrite(pin, HIGH);
+    delayMicroseconds(5);
+    digitalWrite(pin, LOW);
+  
+    // detect the echo from the pulse
+    pinMode(pin, INPUT);
+    duration = pulseIn(pin, HIGH, 4000/*59200*/); // NOTE: timeout
+    return duration;
+  }
 
   // returns 796 upon timeout
   uint16_t getCm(){ // 0 ~ 400cm
