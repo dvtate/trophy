@@ -389,6 +389,12 @@ public:
 
   }
 
+  void invert(){
+    r = !r;
+    g = !g;
+    b = !b;
+  }
+
   // this will never get used...
   void swapPins(const uint8_t& redPin, const uint8_t& bluePin, const uint8_t& greenPin){
     pr = redPin;
