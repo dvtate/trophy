@@ -2,7 +2,6 @@
 #define PATTERNS_H
 
 
-
 // prototype functions to prevent errors
 // these functions get defined later in the file
 extern bool checkInput(void);
@@ -12,6 +11,8 @@ extern void resetLEDs(void);
 extern void refreshLEDs(void);
 
 #define NUMBER_OF_PATTERNS 3
+
+
 
 namespace examplePattern {
   bool initialized = false; // required
@@ -100,10 +101,11 @@ namespace pattern1 {
 
   // local variables
   bool curHi = 0;
-  uint8_t cycles = 0, 
-          activeLEDb = 0, 
-          activeLEDg = 0;
+  uint8_t cycles = 0;
 
+  struct {
+    unsigned int r : 3, g : 3; 
+  } activeLED;
   
   void init(){
 
@@ -114,7 +116,7 @@ namespace pattern1 {
     top[0].color.g = 0;
     top[1].color.g = 255;
 
-    activeLEDb = activeLEDg = 0;
+    activeLED.r = activeLED.g = 0;
     
     curHi = 0;
 
@@ -145,34 +147,37 @@ namespace pattern1 {
     //for (unsigned char i = 0; i < 4; i++)
       if ((cycles++) == 0) {
 
-        //the blues...
-        if (activeLEDb == 5)
-          activeLEDb = 0;
-        else
-          activeLEDb++;
-
         // the greens :D
-        if (activeLEDg == 3)
-          activeLEDg = 0;
+        if (activeLED.g == 3)
+          activeLED.g = 0;
         else
-          activeLEDg++;
+          activeLED.g++;
+
+        //the reds (and those pesky blues)...
+        if (activeLED.r == 5)
+          activeLED.r = 0;
+        else
+          activeLED.r++;
+
       }
+      
 
-
+    // this sets the values to 0 without writing to the lights
+    // we will tell which lights to turn on.
     setLEDsValsZero();
-    
-    // blues:    
-    switch (activeLEDb) {
-      case 0: base[0][0].b = HIGH; break;
-      case 1: base[0][1].b = HIGH; break;
-      case 2: top[1].color.b = 255; break;      
-      case 3: top[0].color.b = 255; break;      
-      case 4: base[1][1].b = HIGH; break;
-      case 5: base[1][0].b = HIGH; break;
+
+
+    // greens:
+    switch (activeLED.g) {
+      case 0: base[0][0].g = HIGH; break;
+      case 1: base[0][1].g = HIGH; break;
+      case 2: base[1][1].g = HIGH; break;
+      case 3: base[1][0].g = HIGH; break;
     }
 
+        
     // reds:
-    switch (activeLEDb) {
+    switch (activeLED.r) {
       case 5: base[0][0].r = HIGH; break;
       case 4: base[0][1].r = HIGH; break;
       case 3: top[1].color.r = 255; break;
@@ -180,13 +185,16 @@ namespace pattern1 {
       case 1: base[1][1].r = HIGH; break;
       case 0: base[1][0].r = HIGH; break;
     }
+    
 
-    // greens:
-    switch (activeLEDg) {
-      case 0: base[0][0].g = HIGH; break;
-      case 1: base[0][1].g = HIGH; break;
-      case 2: base[1][1].g = HIGH; break;
-      case 3: base[1][0].g = HIGH; break;
+    // blues:    
+    switch (activeLED.r) {
+      case 0: base[0][0].b = HIGH; break;
+      case 1: base[0][1].b = HIGH; break;
+      case 2: top[1].color.b = 255; break;      
+      case 3: top[0].color.b = 255; break;      
+      case 4: base[1][1].b = HIGH; break;
+      case 5: base[1][0].b = HIGH; break;
     }
     
     refreshLEDs();
@@ -202,30 +210,88 @@ namespace pattern2 {
   bool initialized = false;
 
   // local variables
-  static uint8_t cycles = 0;
+  uint8_t cycles = 0;
+  
+
+  // I don't like this solution...
+  Color colors[6] {
+       COLOR_RED, COLOR_YELLOW, COLOR_GREEN,
+       COLOR_CYAN, COLOR_BLUE, COLOR_PURPLE//, COLOR_WHITE
+  };
+
+  struct {
+      unsigned int activeLED : 3, colorNum : 3;
+  } light;
+  
+  Color* currentColor;
   
   void init(){
     
     resetLEDs();
     soundCheck();
     if (checkInput()) return;
-    
-    top[0].set(Color(0, 0, 255));
-    top[1].set(Color(0, 0, 255));
-    base[0][0].set(0, 0, 255);
-    base[0][1].set(0, 0, 255);
-    base[1][0].set(0, 0, 255);
-    base[1][1].set(0, 0, 255);
 
+    light.activeLED = 0;
+    light.colorNum = 0;
+    currentColor = &colors[0];
   }
 
   void periodic(){
     soundCheck(); 
     if (checkInput()) return;
 
+    for (unsigned char i = 0; i < 8; i++)
+      if ((cycles++) == 0)
+        if (light.activeLED == 5) {
+          
+          light.activeLED = 0;
+          
+          if (light.colorNum == 5) // after each cycle change the color
+            light.colorNum = 0;
+          else 
+            light.colorNum++;
+  
+          currentColor = &colors[light.colorNum];
+          
+        } else light.activeLED++;
+      
+   
+    
+    switch (light.activeLED) {
+      case 0: base[0][0].set(*currentColor); break;
+      case 1: base[0][1].set(*currentColor); break;
+      case 2: top[1].set(*currentColor); break;
+      case 3: top[0].set(*currentColor); break;
+      case 4: base[1][1].set(*currentColor); break;
+      case 5: base[1][0].set(*currentColor); break;
+    }
+
+    
   }
 
   void disable(){}
 }
 
+
+
+namespace pattern3 {
+  bool initialized = false;
+  
+  
+  void init(){
+    resetLEDs();
+    soundCheck();
+    if (checkInput()) return;
+    
+  }
+
+
+  void periodic(){
+    
+  }
+
+  
+  void disable(){} // do nothing...
+
+}
 #endif
