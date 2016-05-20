@@ -109,11 +109,12 @@ inline void invertLEDs(){
 void theremin(){
   uint16_t resp = 0;
   bool state = LOW;
-  while ((resp = sonar.getMicroseconds() ) < 4000 && resp != 0) { 
+  while ((resp = sonar.getMicroseconds()) < 4000 && resp != 0 && audioEnabled == true) { 
     digitalWrite(BUZZPIN, state);
     state = !state;
     //delayMicroseconds(resp);
     pickNextPattern();
+    soundCheck();
   }
   digitalWrite(BUZZPIN, LOW);
 }
@@ -163,6 +164,5 @@ void loop(){
   callPattern(patternNumber);
   
 }
-
 
 
