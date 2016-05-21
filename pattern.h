@@ -18,6 +18,7 @@ namespace patterns_common {
     pattern2::initialized = false;
     pattern3::initialized = false;
     pattern4::initialized = false;
+    pattern5::initialized = false;
   }
 
 };
@@ -51,6 +52,9 @@ inline void callPattern(const uint8_t& patNum){
   case 4:
     CALL_PATTERN(pattern4);
     break;
+  case 5:
+    CALL_PATTERN(pattern5);
+    break;
   }
 }
 
@@ -72,6 +76,9 @@ inline void endPattern(const uint8_t& patNum){
   case 4:
     pattern4::disable();
     break;
+  case 5:
+    pattern5::disable();
+    break;  
   }
   
   patterns_common::uninitializeAll();
