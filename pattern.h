@@ -17,6 +17,7 @@ namespace patterns_common {
     pattern1::initialized = false;
     pattern2::initialized = false;
     pattern3::initialized = false;
+    pattern4::initialized = false;
   }
 
 };
@@ -47,6 +48,9 @@ inline void callPattern(const uint8_t& patNum){
   case 3:
     CALL_PATTERN(pattern3);
     break;
+  case 4:
+    CALL_PATTERN(pattern4);
+    break;
   }
 }
 
@@ -64,6 +68,9 @@ inline void endPattern(const uint8_t& patNum){
     break;
   case 3:
     pattern3::disable();
+    break;
+  case 4:
+    pattern4::disable();
     break;
   }
   
