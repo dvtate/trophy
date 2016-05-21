@@ -195,6 +195,60 @@ public:
     setColor();
   }
 
+  void digitalSetColor(const Color& clr){
+    color.r = clr.r ? 255 : 0;
+    color.g = clr.g ? 255 : 0;
+    color.b = clr.b ? 255 : 0;
+    refresh();
+  }
+  void digitalRefresh() {
+    //color.r = color.r ? 255 : 0;
+    //color.g = color.g ? 255 : 0;
+    //color.b = color.b ? 255 : 0;
+    digitalWrite(pr, color.r);
+    digitalWrite(pg, color.g);
+    digitalWrite(pb, color.b);
+  }
+  void digitalColorCycle(char order[4]){
+    char curHi = color.r ? 
+        'r' : color.g ? 
+          'g' : color.b? 
+            'b': *order;
+
+    
+    uint8_t i = 0;
+    while (curHi != *(order + i) && i <= 4)
+      i++;
+    
+    i++;
+    
+    curHi = (i < 3) ? *(order + i) : *order;
+
+    switch (curHi) {
+    case 'r':
+      color.r = HIGH;
+      color.g = LOW;
+      color.b = LOW;
+      break;
+      
+    case 'g':
+      color.r = LOW;
+      color.g = HIGH;
+      color.b = LOW;
+      break;
+      
+    case 'b':
+      color.r = LOW;
+      color.g = LOW;
+      color.b = HIGH;
+      break;  
+    }
+
+    
+    digitalRefresh();
+        
+  }
+
   // this will never get used...
   void swapPins(const uint8_t& redPin, const uint8_t& bluePin, const uint8_t& greenPin){
     pr = redPin;
@@ -308,26 +362,24 @@ public:
       r = HIGH;
       g = LOW;
       b = LOW;
-      refresh();
       break;
       
     case 'g':
       r = LOW;
       g = HIGH;
       b = LOW;
-      refresh();
       break;
       
     case 'b':
       r = LOW;
       g = LOW;
       b = HIGH;
-      refresh();
       break;  
     }
+
     
-    setColor();
-    
+    refresh();
+        
   }
 
   void colorCycle(char* order, uint8_t len){
@@ -348,26 +400,23 @@ public:
       r = HIGH;
       g = LOW;
       b = LOW;
-      refresh();
       break;
       
     case 'g':
       r = LOW;
       g = HIGH;
       b = LOW;
-      refresh();
       break;
       
     case 'b':
       r = LOW;
       g = LOW;
       b = HIGH;
-      refresh();
       break;  
       
     }
     
-    setColor();
+    refresh();
     
   }
 
@@ -380,24 +429,21 @@ public:
       r = HIGH;
       g = LOW;
       b = LOW;
-      refresh();
       break;
       
     case 'g':
       r = LOW;
       g = HIGH;
       b = LOW;
-      refresh();
       break;
       
     case 'b':
       r = LOW;
       g = LOW;
       b = HIGH;
-      refresh();
       break;
     }
-
+    refresh();
   }
 
   void invert(){
