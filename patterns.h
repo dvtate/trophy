@@ -497,13 +497,15 @@ namespace pattern5 {
     soundCheck(); 
     if (checkInput()) return;
 
-
-    base[0][0].colorCycle("rgb");
-    base[0][1].colorCycle("gbr");
-    top[1].digitalColorCycle("brg");
-    top[0].digitalColorCycle("rgb");
-    base[1][1].colorCycle("gbr");
-    base[1][0].colorCycle("brg");
+    for (unsigned char i = 0; i < 3; i++)
+      if ( ( cycles++ ) == 0 ) {
+        base[0][0].colorCycle("rgb");
+        base[0][1].colorCycle("gbr");
+        top[1].digitalColorCycle("brg");
+        top[0].digitalColorCycle("rgb");
+        base[1][1].colorCycle("gbr");
+        base[1][0].colorCycle("brg");
+      }
 
   }
 
