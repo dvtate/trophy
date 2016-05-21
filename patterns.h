@@ -10,7 +10,7 @@ extern void soundCheck(void);
 extern void resetLEDs(void);
 extern void refreshLEDs(void);
 
-#define NUMBER_OF_PATTERNS 4
+#define NUMBER_OF_PATTERNS 6
 
 
 
@@ -19,7 +19,11 @@ namespace examplePattern {
 
   // called once before periodic begins
   void init (){
-    
+    resetLEDs(); 
+    soundCheck(); // verify sound and input agree
+    if(checkInput()) return;
+
+    // init code here...
   }
 
   // cycled, continuously run
@@ -62,7 +66,7 @@ namespace pattern0 {
     base[0][1].set(255, 0, 0);
     base[1][0].set(255, 0, 0);
     base[1][1].set(255, 0, 0);
-
+    //Serial.println("pattern0");
   }
 
   void periodic(){
@@ -79,7 +83,7 @@ namespace pattern0 {
 
     // every 255/4 = 63.75 cycles switch color
     for (uint8_t i = 0; i < 4; i++)
-      if ( ( cycles++ ) == 0 ) {
+      if ( ( ++cycles ) == 0 ) {
         base[0][0].colorCycle("rgb"); // boolean types don't need a static curHi
         base[0][1].colorCycle("rgb"); //  a static curHi
         base[1][0].colorCycle("rgb"); // this is good...
@@ -121,6 +125,7 @@ namespace pattern1 {
     curHi = 0;
 
     cycles = 1;
+    //Serial.println("pattern1");
   }
   
   // a local function
@@ -145,7 +150,7 @@ namespace pattern1 {
 
     // cycle
     //for (unsigned char i = 0; i < 4; i++)
-      if ( ( cycles++ ) == 0 ) {
+      if ( ( ++cycles ) == 0 ) {
 
         // the greens :D
         if (activeLED.g == 3)
@@ -234,6 +239,7 @@ namespace pattern2 {
     light.activeLED = 0;
     light.colorNum = 0;
     currentColor = &colors[0];
+    //Serial.println("pattern2");
   }
 
   void periodic(){
@@ -241,7 +247,7 @@ namespace pattern2 {
     if (checkInput()) return;
 
     for (unsigned char i = 0; i < 8; i++)
-      if ( ( cycles++ ) == 0 )
+      if ( ( ++cycles ) == 0 )
         if (light.activeLED == 5) {
           
           light.activeLED = 0;
@@ -271,7 +277,6 @@ namespace pattern2 {
 
   void disable(){}
 }
-
 
 // this doesn't work the way I wanted it to...
 // but it stil looks good...
@@ -348,22 +353,17 @@ namespace pattern3 {
     curColor = 0;
   
     reverse = false;
-  
+    //Serial.println("pattern3");
   }
 
   void periodic(){
     soundCheck(); 
     if (checkInput()) return;
     
-    //for (unsigned char i = 0; i < 4; i++)
+    //for (unsigned char i = 0; i < 2; i++)
     if ( ( ++cycles ) == 0 ) {
       if (curColor == 2) {
         
-        if (startColor == 2)
-          startColor = 0;
-        else 
-          startColor++;
-
         if (startColor == 2)
           startColor = 0;
         else 
@@ -377,28 +377,24 @@ namespace pattern3 {
 
     }
 
-
     nullCorners();
 
-    // this is because I'm a dumbass...
-    uint8_t temp = (((curColor + 1) == 3) ? 0 : curColor + 1);
-    
     switch (startColor) {
     
     case 0: 
-      switch (temp) {
+      switch (curColor) {
         case 0: pmRed(); break;
         case 1: pmGreen(); break;
         case 2: pmBlue(); break;
       } break;
     case 1: 
-      switch (temp) {
+      switch (curColor) {
         case 0: pmGreen(); break;
         case 1: pmBlue(); break;
         case 2: pmRed(); break;
       } break;
     case 2: 
-      switch (temp) {
+      switch (curColor) {
         case 0: pmBlue(); break;
         case 1: pmRed(); break;
         case 2: pmGreen(); break;
@@ -411,6 +407,110 @@ namespace pattern3 {
   void disable(){} // do nothing...
 
 }
+
+
+namespace pattern4 {
+
+  bool initialized = false;
+  uint8_t cycles = 0;
+
+
+  Color colors[8] {
+    COLOR_OFF, COLOR_RED, COLOR_YELLOW, COLOR_GREEN,
+    COLOR_CYAN, COLOR_BLUE, COLOR_PURPLE, COLOR_WHITE
+  };
+
+  void init(){
+    resetLEDs();
+    soundCheck(); 
+    if (checkInput()) return;
+
+    
+    base[0][0].set(colors[0]);
+    base[0][1].set(colors[1]);
+    top[1].set(colors[2]);
+
+    top[0].set(colors[3]);
+    base[1][1].set(colors[4]);
+    base[1][0].set(colors[5]);
+    
+    //Serial.println("pattern4");
+
+/*
+    base[0][0].set(255, 0, 0);
+    base[0][1].set(0, 255, 0);
+    top[1].color.set(0, 0, 255);
+
+    top[0].color.set(255, 0, 0);
+    base[1][1].set(0, 255, 0);
+    base[1][0].set(0, 0, 255);
+*/
+  }
+
+  void periodic(){
+    soundCheck(); 
+    if (checkInput()) return;
+
+
+    static uint8_t offset = 0;
+
+    for (unsigned char i = 0; i < 4; i++)
+      if ( ( cycles++ ) == 0 ) {
+        base[0][0].set(colors[offset % 8]);
+        base[0][1].set(colors[(offset + 1) % 8]);
+        top[1].set(colors[(offset + 2) % 8]);
+    
+        top[0].set(colors[(offset + 3) % 8]);
+        base[1][1].set(colors[(offset + 4) % 8]);
+        base[1][0].set(colors[(offset + 5) % 8]);
+        offset++;
+      }
+
+  }
+
+  void disable(){}
+}
+
+namespace pattern5 {
+
+  bool initialized = false;
+  uint8_t cycles = 0;
+
+  void init(){
+    resetLEDs();
+    soundCheck(); 
+    if (checkInput()) return;
+
+    base[0][0].set(255, 0, 0);
+    base[0][1].set(0, 255, 0);
+    top[1].color.set(0, 0, 255);
+
+    top[0].color.set(255, 0, 0);
+    base[1][1].set(0, 255, 0);
+    base[1][0].set(0, 0, 255);
+    
+    //Serial.println("pattern5");
+
+  }
+
+  void periodic(){
+    soundCheck(); 
+    if (checkInput()) return;
+
+
+    base[0][0].colorCycle("rgb");
+    base[0][1].colorCycle("gbr");
+    top[1].digitalColorCycle("brg");
+    top[0].digitalColorCycle("rgb");
+    base[1][1].colorCycle("gbr");
+    base[1][0].colorCycle("brg");
+
+  }
+
+  void disable(){}
+}
+
+
 
 
 #endif
