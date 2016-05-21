@@ -10,7 +10,7 @@ extern void soundCheck(void);
 extern void resetLEDs(void);
 extern void refreshLEDs(void);
 
-#define NUMBER_OF_PATTERNS 3
+#define NUMBER_OF_PATTERNS 4
 
 
 
@@ -145,7 +145,7 @@ namespace pattern1 {
 
     // cycle
     //for (unsigned char i = 0; i < 4; i++)
-      if ((cycles++) == 0) {
+      if ( ( cycles++ ) == 0 ) {
 
         // the greens :D
         if (activeLED.g == 3)
@@ -241,7 +241,7 @@ namespace pattern2 {
     if (checkInput()) return;
 
     for (unsigned char i = 0; i < 8; i++)
-      if ((cycles++) == 0)
+      if ( ( cycles++ ) == 0 )
         if (light.activeLED == 5) {
           
           light.activeLED = 0;
@@ -273,25 +273,144 @@ namespace pattern2 {
 }
 
 
-
+// this doesn't work the way I wanted it to...
+// but it stil looks good...
 namespace pattern3 {
+  
   bool initialized = false;
+  uint8_t cycles = 0;
+
+  uint8_t startColor = 0;
+  uint8_t curColor = 0;
   
+  bool reverse = false;
+
+  DigitalTriLED &center0 = base[0][1], &center1 = base[1][1];
+
+  Color colors[3] { COLOR_RED, COLOR_BLUE, COLOR_GREEN };
   
+  void nullCorners(){
+    top[0].setNull();
+    top[1].setNull();
+    base[0][0].setNull();
+    base[1][0].setNull();
+  }
+  
+  void pushCorners(const Color& clr){
+    top[0].push(clr);
+    top[1].push(clr);
+    base[0][0].push(clr);
+    base[1][0].push(clr);
+  }
+
+  void pmRed(){
+    if (!reverse) {
+      pushCorners(COLOR_RED);
+      center0.r = HIGH;
+      center1.r = HIGH;
+    } else {
+      pushCorners(COLOR_RED);
+      center0.r = LOW;
+      center1.r = LOW;
+    }
+  }
+  void pmGreen(){
+    if (!reverse) {
+      pushCorners(COLOR_GREEN);
+      center0.g = HIGH;
+      center1.g = HIGH;
+    } else {
+      pushCorners(COLOR_GREEN);
+      center0.g = LOW;
+      center1.g = LOW;
+    }
+  }
+  void pmBlue(){
+    if (!reverse) {
+      pushCorners(COLOR_BLUE);
+      center0.b = HIGH;
+      center1.b = HIGH;
+    } else {
+      pushCorners(COLOR_BLUE);
+      center0.b = LOW;
+      center1.b = LOW;
+    }
+  }
   void init(){
     resetLEDs();
     soundCheck();
     if (checkInput()) return;
     
-  }
+    
+    cycles = 0;
 
+    startColor = 0;
+    curColor = 0;
+  
+    reverse = false;
+  
+  }
 
   void periodic(){
+    soundCheck(); 
+    if (checkInput()) return;
     
-  }
+    //for (unsigned char i = 0; i < 4; i++)
+    if ( ( ++cycles ) == 0 ) {
+      if (curColor == 2) {
+        
+        if (startColor == 2)
+          startColor = 0;
+        else 
+          startColor++;
 
+        if (startColor == 2)
+          startColor = 0;
+        else 
+          startColor++;
+
+        curColor = 0;
+        reverse = !reverse;
+      } else {
+        curColor++;
+      }
+
+    }
+
+
+    nullCorners();
+
+    // this is because I'm a dumbass...
+    uint8_t temp = (((curColor + 1) == 3) ? 0 : curColor + 1);
+    
+    switch (startColor) {
+    
+    case 0: 
+      switch (temp) {
+        case 0: pmRed(); break;
+        case 1: pmGreen(); break;
+        case 2: pmBlue(); break;
+      } break;
+    case 1: 
+      switch (temp) {
+        case 0: pmGreen(); break;
+        case 1: pmBlue(); break;
+        case 2: pmRed(); break;
+      } break;
+    case 2: 
+      switch (temp) {
+        case 0: pmBlue(); break;
+        case 1: pmRed(); break;
+        case 2: pmGreen(); break;
+      } break;
+    }
+
+    refreshLEDs();
+  }
   
   void disable(){} // do nothing...
 
 }
+
+
 #endif
