@@ -56,6 +56,12 @@ public:
   }
 
 
+  void push(const Color& clr){
+    color.r = clr.r;
+    color.g = clr.g;
+    color.b = clr.g;
+  }
+  
   void refresh(){
     analogWrite(pr, color.r);
     analogWrite(pg, color.g);
@@ -257,13 +263,17 @@ public:
     b = val;
     refresh();
   }
-  
+
+  void push(const Color& clr){
+    r = clr.r;
+    g = clr.g;
+    b = clr.g;
+  }
   void refresh(){
     digitalWrite(pr, r);
     digitalWrite(pg, g);
     digitalWrite(pb, b);
   }
-
   
   // sets output to zero without clearing the values
   void off(){
@@ -271,10 +281,11 @@ public:
     digitalWrite(pg, 0);
     digitalWrite(pb, 0);
   }
+  
   void setNull(){
-    r = 0;
-    g = 0;
-    b = 0;
+    r = LOW;
+    g = LOW;
+    b = LOW;
   }
   
   void colorCycle(char order[4]){
