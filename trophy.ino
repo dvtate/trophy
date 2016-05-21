@@ -109,7 +109,7 @@ inline void invertLEDs(){
 void theremin(){
   uint16_t resp = 0;
   bool state = LOW;
-  while ((resp = sonar.getMicroseconds()) < 4000 && resp != 0 && audioEnabled == true) { 
+  while ((resp = sonar.getMicroseconds()) < 5000 && resp != 0 && audioEnabled == true) { 
     digitalWrite(BUZZPIN, state);
     state = !state;
     //delayMicroseconds(resp);
@@ -125,7 +125,7 @@ bool checkInput(){
   static bool previous = false;
 
   // if user's hand is detected
-  if (previous && sonar.getCm() < 20) {
+  if (previous && sonar.getCm() < 30) {
 
     pickNextPattern();
 
