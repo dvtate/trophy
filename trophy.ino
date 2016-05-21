@@ -23,7 +23,7 @@ TriLED top[2] {
 TriLED& top0 = top[0], top1 = top[1];
 
 // pretend its like a coordinate plane...
-DigitalTriLED base[2][2]{
+DigitalTriLED base[2][2]{ // fix this in final draft...
   DigitalTriLED(47, 46, 51), DigitalTriLED(42, 43, 52),
   DigitalTriLED(49, 48, 50), DigitalTriLED(45, 44, 53),
 };
@@ -147,8 +147,8 @@ void soundCheck(){
 void setup(){
 
   Serial.begin(9600);
+
   
-  resetLEDs(); //set all leds to 0
 
  
   // disable pull-up resistor
