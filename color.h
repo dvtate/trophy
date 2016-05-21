@@ -4,7 +4,7 @@
 #include <inttypes.h>
 
 // POD color class
-class Color {
+class Color { // 16777216 colors
 public:
   uint8_t r, g, b;
 
@@ -30,7 +30,11 @@ public:
     b *= multiplier;
     return *this;
   }
-
+  void set(const uint8_t& _r, const uint8_t& _g, const uint8_t& _b){
+    r = _r;
+    g = _g;
+    b = _b;
+  }
 };
 
 
@@ -90,6 +94,8 @@ namespace color {
   }
 }
 
+
+
 // base colors
 #define COLOR_RED Color(255, 0, 0)
 #define COLOR_YELLOW Color(255, 255, 0)
@@ -98,5 +104,6 @@ namespace color {
 #define COLOR_BLUE Color(0, 0, 255)
 #define COLOR_PURPLE Color(255, 0, 255)
 #define COLOR_WHITE Color(255, 255, 255)
-
+#define COLOR_OFF Color(0, 0, 0)
+#define COLOR_BLACK COLOR_OFF
 #endif
