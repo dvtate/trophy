@@ -139,32 +139,37 @@ public:
   void colorCycle(const char order[4], uint8_t& curHi, uint8_t incr = 1){
 
     // this is glitchy...
-    uint8_t &c1 = color.r, &c2 = color.g, &c3 = color.b;
+    
+    if (*order == 'r')
+      uint8_t& c1 = color.r;
+    else if (*order == 'g')
+      uint8_t& c1 = color.g;
+    else if (*order == 'b')
+      uint8_t& c1 = color.b;
+    else
+      uint8_t& c1 = color.r;
 
+    order++; //next char
+    
     if (*order == 'r')
-      c1 = color.r;
+      uint8_t& c2 = color.r;
     else if (*order == 'g')
-      c1 = color.g;
+      uint8_t& c2 = color.g;
     else if (*order == 'b')
-      c1 = color.b;
+      uint8_t& c2 = color.b;
+    else
+      uint8_t& c2 = color.g;
     
     order++; //next char
     
     if (*order == 'r')
-      c2 = color.r;
+      uint8_t& c3 = color.r;
     else if (*order == 'g')
-      c2 = color.g;
+      uint8_t& c3 = color.g;
     else if (*order == 'b')
-      c2 = color.b;
-    
-    order++; //next char
-    
-    if (*order == 'r')
-      c3 = color.r;
-    else if (*order == 'g')
-      c3 = color.g;
-    else if (*order == 'b')
-      c3 = color.b;
+      uint8_t& c3 = color.b;
+    else
+      uint8_t& c3 = color.b;
     
     while (incr-- > 0)
       color::cycle3(c1, c2, c3, curHi);
