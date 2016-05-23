@@ -20,3 +20,5 @@ u = ultrasonic range finder
 ^ = audio switch
 # = master power/kill switch
 ```
+# Heres a video:
+https://youtu.be/dVyNvVf2ImU
