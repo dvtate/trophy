@@ -220,10 +220,10 @@ public:
     digitalWrite(pb, color.b);
   }
   void digitalColorCycle(char order[4]){
-    char curHi = color.r ? 
-        'r' : color.g ? 
-          'g' : color.b? 
-            'b': *order;
+    char curHi = color.r? 
+                    'r' : color.g? 
+                      'g' : color.b? 
+                        'b': *order;
 
     
     uint8_t i = 0;
@@ -254,9 +254,49 @@ public:
       break;  
     }
 
-    
     digitalRefresh();
         
+  }
+  void digitalColorCycle(){
+    
+    char nextHi = color.g? 
+                    'b' : color.b? 
+                      'r' : 'g';
+
+    switch (nextHi) {
+    case 'r':
+      color.r = HIGH;
+      color.g = LOW;
+      color.b = LOW;
+      break;
+      
+    case 'g':
+      color.r = LOW;
+      color.g = HIGH;
+      color.b = LOW;
+      break;
+      
+    case 'b':
+      color.r = LOW;
+      color.g = LOW;
+      color.b = HIGH;
+      break;
+    }
+    
+    digitalRefresh();
+  }
+
+  void invert(){
+    color.r = 255 - color.r;
+    color.g = 255 - color.g;
+    color.b = 255 - color.b;
+    refresh();
+  }
+  
+  void writeInverse(){
+    analogWrite(pr, 255 - color.r);
+    analogWrite(pg, 255 - color.g);
+    analogWrite(pb, 255 - color.b);
   }
 
   // this will never get used...
