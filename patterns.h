@@ -12,6 +12,10 @@ extern void refreshLEDs(void);
 
 #define NUMBER_OF_PATTERNS 6
 
+// defined in pattern.h
+namespace patterns_common {
+  extern Color colors[8];
+}
 
 
 namespace examplePattern {
@@ -33,8 +37,6 @@ namespace examplePattern {
     soundCheck(); // verify sound and input agree
     if(checkInput()) return;
 
-    
-    
   }
   
   // called before ending this pattern
@@ -218,12 +220,6 @@ namespace pattern2 {
   uint8_t cycles = 0;
   
 
-  // I don't like this solution...
-  Color colors[6] {
-       COLOR_RED, COLOR_YELLOW, COLOR_GREEN,
-       COLOR_CYAN, COLOR_BLUE, COLOR_PURPLE//, COLOR_WHITE
-  };
-
   struct {
       unsigned int activeLED : 3, colorNum : 3;
   } light;
@@ -238,7 +234,7 @@ namespace pattern2 {
 
     light.activeLED = 0;
     light.colorNum = 0;
-    currentColor = &colors[0];
+    currentColor = &patterns_common::colors[0];
     //Serial.println("pattern2");
   }
 
@@ -257,7 +253,7 @@ namespace pattern2 {
           else 
             light.colorNum++;
   
-          currentColor = &colors[light.colorNum];
+          currentColor = &patterns_common::colors[light.colorNum];
           
         } else light.activeLED++;
       
@@ -292,15 +288,12 @@ namespace pattern3 {
 
   DigitalTriLED &center0 = base[0][1], &center1 = base[1][1];
 
-  Color colors[3] { COLOR_RED, COLOR_BLUE, COLOR_GREEN };
-  
   void nullCorners(){
     top[0].setNull();
     top[1].setNull();
     base[0][0].setNull();
     base[1][0].setNull();
-  }
-  
+  }  
   void pushCorners(const Color& clr){
     top[0].push(clr);
     top[1].push(clr);
@@ -386,19 +379,23 @@ namespace pattern3 {
         case 0: pmRed(); break;
         case 1: pmGreen(); break;
         case 2: pmBlue(); break;
-      } break;
+      }
+      break;
     case 1: 
       switch (curColor) {
         case 0: pmGreen(); break;
         case 1: pmBlue(); break;
         case 2: pmRed(); break;
-      } break;
+      } 
+      break;
     case 2: 
       switch (curColor) {
         case 0: pmBlue(); break;
         case 1: pmRed(); break;
         case 2: pmGreen(); break;
-      } break;
+      } 
+      break;
+      
     }
 
     refreshLEDs();
@@ -414,25 +411,19 @@ namespace pattern4 {
   bool initialized = false;
   uint8_t cycles = 0;
 
-
-  Color colors[8] {
-    COLOR_OFF, COLOR_RED, COLOR_YELLOW, COLOR_GREEN,
-    COLOR_CYAN, COLOR_BLUE, COLOR_PURPLE, COLOR_WHITE
-  };
-
   void init(){
     resetLEDs();
     soundCheck(); 
     if (checkInput()) return;
 
     
-    base[0][0].set(colors[0]);
-    base[0][1].set(colors[1]);
-    top[1].set(colors[2]);
+    base[0][0].set(patterns_common::colors[0]);
+    base[0][1].set(patterns_common::colors[1]);
+    top[1].set(patterns_common::colors[2]);
 
-    top[0].set(colors[3]);
-    base[1][1].set(colors[4]);
-    base[1][0].set(colors[5]);
+    top[0].set(patterns_common::colors[3]);
+    base[1][1].set(patterns_common::colors[4]);
+    base[1][0].set(patterns_common::colors[5]);
     
     //Serial.println("pattern4");
 
@@ -456,13 +447,13 @@ namespace pattern4 {
 
     for (unsigned char i = 0; i < 4; i++)
       if ( ( cycles++ ) == 0 ) {
-        base[0][0].set(colors[offset % 8]);
-        base[0][1].set(colors[(offset + 1) % 8]);
-        top[1].set(colors[(offset + 2) % 8]);
+        base[0][0].set(patterns_common::colors[offset % 8]);
+        base[0][1].set(patterns_common::colors[(offset + 1) % 8]);
+        top[1].set(patterns_common::colors[(offset + 2) % 8]);
     
-        top[0].set(colors[(offset + 3) % 8]);
-        base[1][1].set(colors[(offset + 4) % 8]);
-        base[1][0].set(colors[(offset + 5) % 8]);
+        top[0].set(patterns_common::colors[(offset + 3) % 8]);
+        base[1][1].set(patterns_common::colors[(offset + 4) % 8]);
+        base[1][0].set(patterns_common::colors[(offset + 5) % 8]);
         offset++;
       }
 
@@ -511,8 +502,6 @@ namespace pattern5 {
 
   void disable(){}
 }
-
-
 
 
 #endif
