@@ -125,7 +125,7 @@ bool checkInput(){
   static bool previous = false;
 
   // if user's hand is detected
-  if (previous && sonar.getCm() < 30) {
+  if (sonar.getCm() < 30 && previous) {
 
     pickNextPattern();
 
@@ -146,7 +146,7 @@ void soundCheck(){
 
 void setup(){
 
-  Serial.begin(9600);
+  //Serial.begin(9600);
 
   
 
@@ -162,7 +162,5 @@ void loop(){
 
   // so simple 
   callPattern(patternNumber);
-  
 }
-
 
