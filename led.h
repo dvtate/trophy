@@ -11,7 +11,7 @@
 class TriLED {
 public:
   Color color;
-  unsigned char pr:7, pg:7, pb:7;
+  unsigned char pr : 7, pg : 7, pb : 7;
   
   TriLED(const uint8_t& redPin, const uint8_t& greenPin, const uint8_t& bluePin):
     pr(redPin), pg(greenPin), pb(bluePin), color(0,0,0) 
@@ -82,60 +82,10 @@ public:
 
   void colorCycle(const char order[4], uint8_t incr = 1){
 
-    // I don't like this solution...
-    uint8_t *c1, *c2, *c3;
-    
-    if (*order == 'r')
-      c1 = &color.r;
-    else if (*order == 'g')
-      c1 = &color.g;
-    else if (*order == 'b')
-      c1 = &color.b;
-    else
-      c1 = &color.r;
-
-    order++; //next char
-    
-    if (*order == 'r')
-      c2 = &color.r;
-    else if (*order == 'g')
-      c2 = &color.g;
-    else if (*order == 'b')
-      c2 = &color.b;
-    else
-      c2 = &color.g;
-
-    order++; //next char
-    
-    if (*order == 'r')
-      c3 = &color.r;
-    else if (*order == 'g')
-      c3 = &color.g;
-    else if (*order == 'b')
-      c3 = &color.b;
-    else
-      c3 = &color.b;
-
-
     static uint8_t curHi = 0;
     
-    while (incr-- > 0)
-      color::cycle3(*c1, *c2, *c3, curHi);
-
-
-    /*
-    // for debugging only (uses too much resources)
-     Serial.print("r:");
-     Serial.print(color.r, DEC);
-     Serial.print(" g:");
-     Serial.print(color.g, DEC);
-     Serial.print(" b:");
-     Serial.print(color.b, DEC);
-     Serial.print(" CurHi: ");
-     Serial.println(curHi, DEC);
-    */
-    setColor();
-    
+    colorCycle(order, curHi, incr);
+  
   }
   
   void colorCycle(const char order[4], uint8_t& curHi, uint8_t incr = 1){
@@ -176,7 +126,6 @@ public:
 
     while (incr-- > 0)
       color::cycle3(*c1, *c2, *c3, curHi);
- 
 
     /*
     // for debugging only (uses too much resources)
@@ -437,8 +386,8 @@ public:
   }
 
   void colorCycle(char* order, uint8_t len){
-    char curHi = r ?
-        'r' : g ? 
+    char curHi = r?
+        'r' : g? 
           'g' : b? 
             'b': *order;
 
@@ -447,6 +396,7 @@ public:
     while (curHi != *(order + i) && i < len)
       i++;
     i++;
+    
     curHi = (i < len) ? *(order + i) : *order;
 
     switch (curHi) {
@@ -592,8 +542,8 @@ public:
   }
 
   void refresh(){
-    analogWrite(p0,v0);
-    analogWrite(p1,v1);
+    analogWrite(p0, v0);
+    analogWrite(p1, v1);
   }
   void set(const uint8_t& val0, const uint8_t& val1){
     v0 = val0;
