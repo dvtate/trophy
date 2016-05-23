@@ -20,7 +20,11 @@ namespace patterns_common {
     pattern4::initialized = false;
     pattern5::initialized = false;
   }
-
+  
+  Color colors[8] {
+    COLOR_RED, COLOR_YELLOW, COLOR_GREEN, COLOR_CYAN, 
+    COLOR_BLUE, COLOR_PURPLE, COLOR_WHITE, COLOR_OFF
+  };
 };
 
 
