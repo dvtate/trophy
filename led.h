@@ -55,7 +55,6 @@ public:
     setColor(); // write/apply changes
   }
 
-
   void push(const Color& clr){
     color.r = clr.r;
     color.g = clr.g;
@@ -123,126 +122,6 @@ public:
     while (incr-- > 0)
       color::cycle3(*c1, *c2, *c3, curHi);
 
-    /* but this one is worse
-    while (incr-- > 0)
-      if (*order == 'r') {
-        order++;
-        if (*order == 'r') {
-          order++;
-          if (*order == 'r') {
-            color::cycle3(color.r, color.r, color.r, curHi);
-          } else if (*order == 'g') {
-            color::cycle3(color.r, color.r, color.g, curHi);
-          } else if (*order == 'b') {
-            color::cycle3(color.r, color.r, color.b, curHi);
-          } else {
-            color::cycle3(color.r, color.g, color.b, curHi);
-          }
-        } else if (*order == 'g') {
-          order++;
-          if (*order == 'r') {
-            color::cycle3(color.r, color.g, color.r, curHi);
-          } else if (*order == 'g') {
-            color::cycle3(color.r, color.g, color.g, curHi);
-          } else if (*order == 'b') {
-            color::cycle3(color.r, color.g, color.b, curHi);
-          } else {
-            color::cycle3(color.r, color.g, color.b, curHi);
-          }
-        } else if (*order == 'b') {
-          order++;
-          if (*order == 'r') {
-            color::cycle3(color.r, color.b, color.r, curHi);
-          } else if (*order == 'g') {
-            color::cycle3(color.r, color.b, color.g, curHi);
-          } else if (*order == 'b') {
-            color::cycle3(color.r, color.b, color.b, curHi);
-          } else {
-            color::cycle3(color.r, color.g, color.b, curHi);
-          }
-        } else {
-          color::cycle3(color.r, color.g, color.b, curHi);
-        }
-      } else if (*order == 'g') {
-        order++;
-        if (*order == 'r') {
-          order++;
-          if (*order == 'r') {
-            color::cycle3(color.g, color.r, color.r, curHi);
-          } else if (*order == 'g') {
-            color::cycle3(color.g, color.r, color.g, curHi);
-          } else if (*order == 'b') {
-            color::cycle3(color.g, color.r, color.b, curHi);
-          } else {
-            color::cycle3(color.r, color.g, color.b, curHi);
-          }
-        } else if (*order == 'g') {
-          order++;
-          if (*order == 'r') {
-            color::cycle3(color.g, color.g, color.r, curHi);
-          } else if (*order == 'g') {
-            color::cycle3(color.g, color.g, color.g, curHi);
-          } else if (*order == 'b') {
-            color::cycle3(color.g, color.g, color.b, curHi);
-          } else {
-            color::cycle3(color.r, color.g, color.b, curHi);
-          }
-        } else if (*order == 'b') {
-          order++;
-          if (*order == 'r') {
-            color::cycle3(color.g, color.b, color.r, curHi);
-          } else if (*order == 'g') {
-            color::cycle3(color.g, color.b, color.g, curHi);
-          } else if (*order == 'b') {
-            color::cycle3(color.g, color.b, color.b, curHi);
-          } else {
-            color::cycle3(color.r, color.g, color.b, curHi);
-          }
-        } else {
-          color::cycle3(color.r, color.g, color.b, curHi);
-        }
-      } else if (*order == 'b') {
-        order++;
-        if (*order == 'r') {
-          order++;
-          if (*order == 'r') {
-            color::cycle3(color.b, color.r, color.r, curHi);
-          } else if (*order == 'g') {
-            color::cycle3(color.b, color.r, color.g, curHi);
-          } else if (*order == 'b') {
-            color::cycle3(color.b, color.r, color.b, curHi);
-          } else {
-            color::cycle3(color.r, color.g, color.b, curHi);
-          }
-        } else if (*order == 'g') {
-          order++;
-          if (*order == 'r') {
-            color::cycle3(color.b, color.g, color.r, curHi);
-          } else if (*order == 'g') {
-            color::cycle3(color.b, color.g, color.g, curHi);
-          } else if (*order == 'b') {
-            color::cycle3(color.b, color.g, color.b, curHi);
-          } else {
-            color::cycle3(color.r, color.g, color.b, curHi);
-          }
-        } else if (*order == 'b') {
-          order++;
-          if (*order == 'r') {
-            color::cycle3(color.b, color.b, color.r, curHi);
-          } else if (*order == 'g') {
-            color::cycle3(color.b, color.b, color.g, curHi);
-          } else if (*order == 'b') {
-            color::cycle3(color.b, color.b, color.b, curHi);
-          } else {
-            color::cycle3(color.r, color.g, color.b, curHi);
-          }
-        } else {
-          color::cycle3(color.r, color.g, color.b, curHi);
-        }
-      } else {
-        color::cycle3(color.r, color.g, color.b, curHi);
-      }
-      */
 
     /*
     // for debugging only (uses too much resources)
