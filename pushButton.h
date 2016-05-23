@@ -6,7 +6,7 @@
 class PushButton {
 public:
   unsigned char pin : 7;
-  bool value;
+  bool value : 1;
 
   PushButton(uint8_t _pin):
     pin(_pin), value(0) 
@@ -30,7 +30,18 @@ public:
     
     return state;
   }
-
+  
+  bool toggle(bool& state, bool& canChange){
+    
+    if (digitalRead(pin) && !canChange) {
+      canChange = true;
+    } else if (!digitalRead(pin) && canChange) {
+      canChange = false;
+      return state = !state;
+    }
+    
+    return state;
+  }
 };
 
 #endif
