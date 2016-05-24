@@ -88,7 +88,7 @@ void setLEDsValsZero(){
   base[1][1].setNull();
 }
 
-// needed because my dumb ass bought common anode instead of common cathode LEDs
+//Shouldn't be needed...
 inline void invertLEDs(){
   top[0].color.invert();
   top[1].color.invert();
