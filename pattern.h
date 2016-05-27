@@ -21,13 +21,13 @@ namespace patterns_common {
 }
 
 
-
-#define CALL_PATTERN(N) \ // takes a namespace as a parameter :P
+// takes a namespace as a parameter :P
+#define CALL_PATTERN(N) \
   if (!patterns_common::initialized) {\
     patterns_common::initialized = true;\
     N::init();\
   } else {\
-    N::periodic();\ 
+    N::periodic();\
   }
 
 
