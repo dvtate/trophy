@@ -17,8 +17,7 @@ public:
     { return (value = digitalRead(pin)); }
   
   bool toggle(){
-    static bool canChange = false;
-    static bool state = LOW;
+    static bool canChange = false, state = LOW;
 
     
     if (digitalRead(pin) && !canChange) {
