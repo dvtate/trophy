@@ -79,7 +79,7 @@ namespace pattern0 {
     top[1].refresh();
 
     // every 255/4 = 63.75 cycles switch color
-    for (uint8_t i = 0; i < 4; i++)
+    for (uint8_t i = 0; i < 4; i++) // runs 4x faster
       if ( ( ++cycles ) == 0 ) {
         base[0][0].colorCycle("rgb"); // boolean types don't need a static curHi
         base[0][1].colorCycle("rgb"); //  a static curHi...
@@ -143,7 +143,7 @@ namespace pattern1 {
     color::cycle2(top[0].color.g, top[1].color.g, curHi, 4);
 
     // cycle
-    //for (unsigned char i = 0; i < 4; i++)
+    for (bool i = true; i; i = !i) // runs 2x
       if ( ( ++cycles ) == 0 ) {
 
         // the greens :D
@@ -233,7 +233,7 @@ namespace pattern2 {
     soundCheck(); 
     if (checkInput()) return;
 
-    for (unsigned char i = 0; i < 8; i++)
+    for (unsigned char i = 0; i < 8; i++) // runs 8x faster
       if ( ( ++cycles ) == 0 )
         if (light.activeLED == 5) {
           
@@ -344,7 +344,7 @@ namespace pattern3 {
     soundCheck(); 
     if (checkInput()) return;
     
-    //for (unsigned char i = 0; i < 2; i++)
+    for (unsigned char i = 0; i < 4; i++) // runs 4x faster
     if ( ( ++cycles ) == 0 ) {
       if (curColor == 2) {
         
@@ -435,7 +435,7 @@ namespace pattern4 {
 
     static uint8_t offset = 0;
 
-    for (unsigned char i = 0; i < 4; i++)
+    for (unsigned char i = 0; i < 4; i++) // runs 4x faster
       if ( ( cycles++ ) == 0 ) {
         base[0][0].set(patterns_common::colors[offset % 8]);
         base[0][1].set(patterns_common::colors[(offset + 1) % 8]);
@@ -477,7 +477,7 @@ namespace pattern5 {
     soundCheck(); 
     if (checkInput()) return;
 
-    for (unsigned char i = 0; i < 3; i++)
+    for (unsigned char i = 0; i < 3; i++) // runs 3x faster
       if ( ( cycles++ ) == 0 ) {
         base[0][0].colorCycle("rgb");
         base[0][1].colorCycle("gbr");
@@ -514,44 +514,58 @@ namespace pattern6 {
     soundCheck(); 
     if (checkInput()) return;
 
-    for (unsigned char i = 0; i < 4; i++)
-      if ( ( ++cycles ) == 0 )
-        if (data.phase == 5) {
+    // this nesting is ugly
+    for (unsigned char i = 0; i < 4; i++) // runs 4x faster
+      if ( ( ++cycles ) == 0 ) {
+        if (data.phase == 5)
           data.phase = 0;
-          if (data.color == 6)
-            data.color = 0;
-          else 
-            data.color++;
-        } else {
+        else
           data.phase++;
-        }
 
-    resetLEDs();
+        switch (data.phase) {
     
-    switch (data.phase) {
+        case 0: // bottom 2
+          base[0][0].setColor(patterns_common::colors[data.color]);
+          base[1][0].setColor(patterns_common::colors[data.color]);
+          break;
+          
+        case 1: // bottom 4
+          base[0][0].setColor(patterns_common::colors[data.color]);
+          base[0][1].setColor(patterns_common::colors[data.color]);
+          base[1][0].setColor(patterns_common::colors[data.color]);
+          base[1][1].setColor(patterns_common::colors[data.color]);
+          break;
+    
+        case 2: case 5: // all HIGH
+          base[0][0].setColor(patterns_common::colors[data.color]);
+          base[0][1].setColor(patterns_common::colors[data.color]);
+          base[1][0].setColor(patterns_common::colors[data.color]);
+          base[1][1].setColor(patterns_common::colors[data.color]);
+          top[0].setColor(patterns_common::colors[data.color]);
+          top[1].setColor(patterns_common::colors[data.color]);
 
-    case 1: case 5:// bottom 2
-      base[0][0].setColor(patterns_common::colors[data.color]);
-      base[1][0].setColor(patterns_common::colors[data.color]);
-      break;
-      
-    case 2: case 4: // middle 4
-      base[0][0].setColor(patterns_common::colors[data.color]);
-      base[0][1].setColor(patterns_common::colors[data.color]);
-      base[1][0].setColor(patterns_common::colors[data.color]);
-      base[1][1].setColor(patterns_common::colors[data.color]);
-      break;
-
-    case 3: // all HIGH
-      base[0][0].setColor(patterns_common::colors[data.color]);
-      base[0][1].setColor(patterns_common::colors[data.color]);
-      base[1][0].setColor(patterns_common::colors[data.color]);
-      base[1][1].setColor(patterns_common::colors[data.color]);
-      top[0].setColor(patterns_common::colors[data.color]);
-      top[1].setColor(patterns_common::colors[data.color]);
-      break;
-    }
-
+          //TODO: replace this with code to set data.color to a
+          // number between 0 and 7. That way the color changes
+          // would be more noticeable and less predictable.
+          if (data.color == 7) data.color = 0;
+          else data.color++;
+          
+          break;
+        
+        case 3: // top 2
+          top[0].setColor(patterns_common::colors[data.color]);
+          top[1].setColor(patterns_common::colors[data.color]);
+          break;
+    
+        case 4: // top 4
+          top[0].setColor(patterns_common::colors[data.color]);
+          top[1].setColor(patterns_common::colors[data.color]);
+          base[0][1].setColor(patterns_common::colors[data.color]);
+          base[1][1].setColor(patterns_common::colors[data.color]);
+          break;
+    
+        }
+      }
   }
 
   void disable(){}
