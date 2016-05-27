@@ -10,7 +10,7 @@ extern void soundCheck(void);
 extern void resetLEDs(void);
 extern void refreshLEDs(void);
 
-#define NUMBER_OF_PATTERNS 6
+#define NUMBER_OF_PATTERNS 7
 
 // defined in pattern.h
 namespace patterns_common {
@@ -19,11 +19,10 @@ namespace patterns_common {
 
 
 namespace examplePattern {
-  bool initialized = false; // required
 
   // called once before periodic begins
   void init (){
-    resetLEDs(); 
+    
     soundCheck(); // verify sound and input agree
     if(checkInput()) return;
 
@@ -35,21 +34,17 @@ namespace examplePattern {
 
     // these must be called at least once.
     soundCheck(); // verify sound and input agree
-    if(checkInput()) return;
+    if(checkInput()) return; // NOTE: this delays 4 or 8 miliseconds
 
   }
   
   // called before ending this pattern
-  void disable(){
-
-    
-  }
+  void disable(){ }
   
 }
 
 
 namespace pattern0 {
-  bool initialized = false;
 
   // local variables
   uint8_t cycles = 0, curHi = 0;
@@ -87,23 +82,20 @@ namespace pattern0 {
     for (uint8_t i = 0; i < 4; i++)
       if ( ( ++cycles ) == 0 ) {
         base[0][0].colorCycle("rgb"); // boolean types don't need a static curHi
-        base[0][1].colorCycle("rgb"); //  a static curHi
-        base[1][0].colorCycle("rgb"); // this is good...
+        base[0][1].colorCycle("rgb"); //  a static curHi...
+        base[1][0].colorCycle("rgb"); // this is good :D
         base[1][1].colorCycle("rgb"); 
       }
-
-   
 
   }
 
   void disable(){
-    
+    // there's nothing to do here...
   }
 }
 
 
 namespace pattern1 {
-  bool initialized = false;
 
   // local variables
   bool curHi = 0;
@@ -214,7 +206,6 @@ namespace pattern1 {
 
 
 namespace pattern2 {
-  bool initialized = false;
 
   // local variables
   uint8_t cycles = 0;
@@ -255,8 +246,9 @@ namespace pattern2 {
   
           currentColor = &patterns_common::colors[light.colorNum];
           
-        } else light.activeLED++;
-      
+        } else {
+          light.activeLED++;
+        }
    
     
     switch (light.activeLED) {
@@ -277,8 +269,7 @@ namespace pattern2 {
 // this doesn't work the way I wanted it to...
 // but it stil looks good...
 namespace pattern3 {
-  
-  bool initialized = false;
+
   uint8_t cycles = 0;
 
   uint8_t startColor = 0;
@@ -408,7 +399,6 @@ namespace pattern3 {
 
 namespace pattern4 {
 
-  bool initialized = false;
   uint8_t cycles = 0;
 
   void init(){
@@ -464,7 +454,6 @@ namespace pattern4 {
 
 namespace pattern5 {
 
-  bool initialized = false;
   uint8_t cycles = 0;
 
   void init(){
@@ -503,5 +492,68 @@ namespace pattern5 {
   void disable(){}
 }
 
+namespace pattern6 {
 
+  uint8_t cycles = 0;
+
+  struct {
+    unsigned int  color : 3, 
+                  phase : 3;
+  } data;
+
+  void init(){
+    resetLEDs();
+    soundCheck(); 
+    if (checkInput()) return;
+
+
+    data.color = data.phase = 0;
+  }
+
+  void periodic(){
+    soundCheck(); 
+    if (checkInput()) return;
+
+    for (unsigned char i = 0; i < 4; i++)
+      if ( ( ++cycles ) == 0 )
+        if (data.phase == 5) {
+          data.phase = 0;
+          if (data.color == 6)
+            data.color = 0;
+          else 
+            data.color++;
+        } else {
+          data.phase++;
+        }
+
+    resetLEDs();
+    
+    switch (data.phase) {
+
+    case 1: case 5:// bottom 2
+      base[0][0].setColor(patterns_common::colors[data.color]);
+      base[1][0].setColor(patterns_common::colors[data.color]);
+      break;
+      
+    case 2: case 4: // middle 4
+      base[0][0].setColor(patterns_common::colors[data.color]);
+      base[0][1].setColor(patterns_common::colors[data.color]);
+      base[1][0].setColor(patterns_common::colors[data.color]);
+      base[1][1].setColor(patterns_common::colors[data.color]);
+      break;
+
+    case 3: // all HIGH
+      base[0][0].setColor(patterns_common::colors[data.color]);
+      base[0][1].setColor(patterns_common::colors[data.color]);
+      base[1][0].setColor(patterns_common::colors[data.color]);
+      base[1][1].setColor(patterns_common::colors[data.color]);
+      top[0].setColor(patterns_common::colors[data.color]);
+      top[1].setColor(patterns_common::colors[data.color]);
+      break;
+    }
+
+  }
+
+  void disable(){}
+}
 #endif
