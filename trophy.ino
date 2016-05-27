@@ -8,8 +8,6 @@
 #include "pushButton.h"
 
 
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 //hardware:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -46,7 +44,6 @@ bool audioEnabled = true;
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 
 
 void resetLEDs(){
@@ -88,7 +85,7 @@ void setLEDsValsZero(){
   base[1][1].setNull();
 }
 
-//Shouldn't be needed...
+// needed because my dumb ass bought common anode instead of common cathode LEDs
 inline void invertLEDs(){
   top[0].color.invert();
   top[1].color.invert();
@@ -110,20 +107,25 @@ void theremin(){
   uint16_t resp = 0;
   bool state = LOW;
   while ((resp = sonar.getMicroseconds()) < 5000 && resp != 0 && audioEnabled == true) { 
+    
     digitalWrite(BUZZPIN, state);
+    
     state = !state;
     //delayMicroseconds(resp);
+    
     pickNextPattern();
     soundCheck();
   }
   digitalWrite(BUZZPIN, LOW);
 }
 
+
 // returns true when it's time to switch patterns
 bool checkInput(){
 
   static bool previous = false;
-
+  
+  // NOTE: this delays 4 or 8miliseconds 
   // if user's hand is detected
   if (sonar.getCm() < 30 && previous) {
 
@@ -148,9 +150,6 @@ void setup(){
 
   //Serial.begin(9600);
 
-  
-
- 
   // disable pull-up resistor
   pinMode(BUZZLEDPIN, OUTPUT);
   pinMode(BUZZPIN, OUTPUT);
