@@ -11,28 +11,20 @@ extern void soundCheck();
 
 
 namespace patterns_common {
-  // resets all of the functions...
-  inline void uninitializeAll(){
-    pattern0::initialized = false;
-    pattern1::initialized = false;
-    pattern2::initialized = false;
-    pattern3::initialized = false;
-    pattern4::initialized = false;
-    pattern5::initialized = false;
-  }
-  
+
   Color colors[8] {
     COLOR_RED, COLOR_YELLOW, COLOR_GREEN, COLOR_CYAN, 
     COLOR_BLUE, COLOR_PURPLE, COLOR_WHITE, COLOR_OFF
   };
-};
+
+  bool initialized = false;
+}
 
 
 
-#define CALL_PATTERN(N) \
-  if (!N::initialized) {\
-    patterns_common::uninitializeAll();\
-    N::initialized = true;\
+#define CALL_PATTERN(N) \ // takes a namespace as a parameter :P
+  if (!patterns_common::initialized) {\
+    patterns_common::initialized = true;\
     N::init();\
   } else {\
     N::periodic();\ 
@@ -59,6 +51,9 @@ inline void callPattern(const uint8_t& patNum){
   case 5:
     CALL_PATTERN(pattern5);
     break;
+  case 6:
+    CALL_PATTERN(pattern6);
+    break;
   }
 }
 
@@ -82,10 +77,13 @@ inline void endPattern(const uint8_t& patNum){
     break;
   case 5:
     pattern5::disable();
-    break;  
+    break;
+  case 6:
+    pattern6::disable();
+    break;
   }
   
-  patterns_common::uninitializeAll();
+  patterns_common::initialized = false;
   resetLEDs();
 }
 
