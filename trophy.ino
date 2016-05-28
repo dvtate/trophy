@@ -12,15 +12,14 @@
 //hardware:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
+// 2 PWM RGB LEDs
 TriLED top[2] {
   TriLED(13, 12, 11, Color(255, 0, 0)),
   TriLED(10, 9, 8, Color(255, 0, 0))
 };
 
-TriLED& top0 = top[0], top1 = top[1];
-
-// pretend its like a coordinate plane...
+// 4 digital RGB LEDs 
+// pretend its like a coordinate plane... this is bad...
 DigitalTriLED base[2][2]{ // fix this in final draft...
   DigitalTriLED(47, 46, 51), DigitalTriLED(42, 43, 52),
   DigitalTriLED(49, 48, 50), DigitalTriLED(45, 44, 53),
@@ -55,17 +54,8 @@ void resetLEDs(){
   base[1][0].set(LOW);
   base[1][1].set(LOW);
 }
-void setLEDsHigh(){
-  top[0].set(255);
-  top[1].set(255);
 
-  base[0][0].set(HIGH);
-  base[0][1].set(HIGH);
-  base[1][0].set(HIGH);
-  base[1][1].set(HIGH);
-}
-
-inline void refreshLEDs(){
+void refreshLEDs(){
   top[0].refresh();
   top[1].refresh();
 
@@ -75,27 +65,6 @@ inline void refreshLEDs(){
   base[1][1].refresh();
 }
 
-void setLEDsValsZero(){
-  top[0].setNull();
-  top[1].setNull();
-
-  base[0][0].setNull();
-  base[0][1].setNull();
-  base[1][0].setNull();
-  base[1][1].setNull();
-}
-
-// needed because my dumb ass bought common anode instead of common cathode LEDs
-inline void invertLEDs(){
-  top[0].color.invert();
-  top[1].color.invert();
-
-  base[0][0].invert();
-  base[0][1].invert();
-  base[1][0].invert();
-  base[1][1].invert();
-  refreshLEDs();
-}
 
 // patterns code:
 #include "patterns.h" // the definitions for the patterns
@@ -162,4 +131,3 @@ void loop(){
   // so simple 
   callPattern(patternNumber);
 }
-
