@@ -544,11 +544,10 @@ namespace pattern6 {
           top[0].setColor(patterns_common::colors[data.color]);
           top[1].setColor(patterns_common::colors[data.color]);
 
-          //TODO: replace this with code to set data.color to a
-          // number between 0 and 7. That way the color changes
-          // would be more noticeable and less predictable.
-          if (data.color == 7) data.color = 0;
-          else data.color++;
+          // not random, but close enough :T
+          for (uint8_t i = 0; i < 6; i++)
+            if (data.color == 7) data.color = 0;
+            else data.color++;
           
           break;
         
