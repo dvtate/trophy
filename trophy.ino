@@ -3,7 +3,6 @@
 #include <inttypes.h>
 
 #include "led.h"
-#include "color.h" //included by led.h
 #include "ultrasonic.h" 
 #include "pushButton.h"
 
@@ -14,8 +13,7 @@
 
 // 2 PWM RGB LEDs
 TriLED top[2] {
-  TriLED(13, 12, 11, Color(255, 0, 0)),
-  TriLED(10, 9, 8, Color(255, 0, 0))
+  TriLED(13, 12, 11), TriLED(10, 9, 8)
 };
 
 // 4 digital RGB LEDs 
