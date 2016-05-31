@@ -2,9 +2,9 @@
 
 #include <inttypes.h>
 
-#include "led.h"
-#include "ultrasonic.h" 
-#include "pushButton.h"
+#include "led.h" // Lights and colors
+#include "ultrasonic.h" // ultrasonic range finder
+#include "pushButton.h" // pushbutton
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12,20 +12,16 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 // 2 PWM RGB LEDs
-TriLED top[2] {
-  TriLED(13, 12, 11), TriLED(10, 9, 8)
-};
+TriLED top[2] { TriLED(13, 12, 11), TriLED(10, 9, 8) };
 
 // 4 digital RGB LEDs 
-// pretend its like a coordinate plane... this is bad...
-DigitalTriLED base[2][2]{ // fix this in final draft...
+// I already know the arrangement is fucked up...
+DigitalTriLED base[2][2]{ // fix arrangement final draft...
   DigitalTriLED(47, 46, 51), DigitalTriLED(42, 43, 52),
   DigitalTriLED(49, 48, 50), DigitalTriLED(45, 44, 53),
 };
 
-
-
-// the ultrasonic sensor / user interface
+// the ultrasonic sensor
 Ultrasonic sonar(A0);
 
 
@@ -124,7 +120,6 @@ void setup(){
 }
 
 void loop(){
-
 
   // so simple 
   callPattern(patternNumber);
