@@ -70,14 +70,9 @@ namespace pattern0 {
     soundCheck(); // should be called before checkInput();
     if (checkInput()) return;
 
-    // I should use the color cycle member function...
-    color::cycle3(top[0].color.r, top[0].color.g, top[0].color.b, curHi);
-    color::cycle3(top[1].color.r, top[1].color.g, top[1].color.b, curHi);
-   
-
-    top[0].refresh();
-    top[1].refresh();
-
+    top[0].colorCycle(curHi, 4);
+    top[1].colorCycle(curHi, 4);
+  
     // every 255/4 = 63.75 cycles switch color
     for (uint8_t i = 0; i < 4; i++) // runs 4x faster
       if ( ( ++cycles ) == 0 ) {
@@ -238,7 +233,7 @@ namespace pattern2 {
         if (light.activeLED == 5) {
           
           light.activeLED = 0;
-          
+
           if (light.colorNum == 5) // after each cycle change the color
             light.colorNum = 0;
           else 
