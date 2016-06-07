@@ -16,9 +16,9 @@ extern void soundCheck();
 // multiple times as each pattern needs it.
 namespace patterns_common {
 
-  Color colors[8] {
-    COLOR_RED, COLOR_YELLOW, COLOR_GREEN, COLOR_CYAN,
-    COLOR_BLUE, COLOR_PURPLE, COLOR_WHITE, COLOR_OFF
+  DigitalColor colors[8] {
+    D_COLOR_RED, D_COLOR_YELLOW, D_COLOR_GREEN, D_COLOR_CYAN,
+    D_COLOR_BLUE, D_COLOR_PURPLE, D_COLOR_WHITE, D_COLOR_OFF
   };
 
   bool initialized = false;
@@ -36,7 +36,7 @@ namespace patterns_common {
   }
 
 // initialize once and then call pattern::periodic()
-inline void callPattern(const uint8_t& patNum){
+void callPattern(uint8_t patNum){
   switch (patNum) {
   case 0:
     CALL_PATTERN(pattern0);
@@ -63,7 +63,7 @@ inline void callPattern(const uint8_t& patNum){
 }
 
 // clean up after each pattern
-inline void endPattern(uint8_t patNum){
+void endPattern(uint8_t patNum){
   switch (patNum) {
   case 0:
     pattern0::disable();
