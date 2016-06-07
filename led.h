@@ -296,7 +296,7 @@ public:
   }
 
   // this will never get used...
-  void swapPins(const uint8_t& redPin, const uint8_t& bluePin, const uint8_t& greenPin){
+  void swapPins(uint8_t redPin, uint8_t bluePin, uint8_t greenPin){
     pr = redPin;
     pg = greenPin;
     pb = bluePin;
@@ -316,7 +316,7 @@ public:
   bool r : 1, g : 1, b : 1;
   unsigned int pr : 7, pg : 7, pb : 7;
 
-  DigitalTriLED(const uint8_t& redPin, const uint8_t& greenPin, const uint8_t& bluePin):
+  DigitalTriLED(uint8_t redPin, uint8_t greenPin, uint8_t bluePin):
     pr(redPin), pg(greenPin), pb(bluePin), r(LOW), g(LOW), b(LOW)
   {
     pinMode(pr, OUTPUT);
@@ -324,7 +324,7 @@ public:
     pinMode(pb, OUTPUT);
   }
 
-  DigitalTriLED(const uint8_t& redPin, const uint8_t& greenPin, const uint8_t& bluePin, Color _clr):
+  DigitalTriLED(uint8_t redPin, uint8_t greenPin, uint8_t bluePin, Color _clr):
     pr(redPin), pg(greenPin), pb(bluePin), r(_clr.r), g(_clr.g), b(_clr.b)
   {
     pinMode(pr, OUTPUT);
@@ -537,7 +537,7 @@ public:
   }
 
   // this will never get used...
-  void swapPins(const uint8_t& redPin, const uint8_t& bluePin, const uint8_t& greenPin){
+  void swapPins(uint8_t redPin, uint8_t bluePin, uint8_t greenPin){
     pr = redPin;
     pg = greenPin;
     pb = bluePin;
@@ -563,14 +563,14 @@ public:
   unsigned int p0 : 7, p1 : 7;
   bool v0 : 1, v1 : 1; // could be replaced by uint8_t for PWM output
 
-  BiLED(const uint8_t& pin0, const uint8_t& pin1):
+  BiLED(uint8_t pin0, uint8_t pin1):
     p0(pin0), p1(pin1), v0(0), v1(0)
   {
     pinMode(p0, OUTPUT);
     pinMode(p1, OUTPUT);
   }
 
-  BiLED(const uint8_t& pin0, const uint8_t& pin1, const bool& val0, const bool& val1):
+  BiLED(uint8_t pin0, uint8_t pin1, const bool& val0, const bool& val1):
     p0(pin0), p1(pin1), v0(val0), v1(val1)
   {
     pinMode(p0, OUTPUT);
@@ -584,14 +584,14 @@ public:
   }
 
   // push and apply values
-  void set(const uint8_t& val0, const uint8_t& val1){
+  void set(uint8_t val0, uint8_t val1){
     v0 = val0;
     v1 = val1;
     refresh();
   }
 
   // push and apply the same value for v0 & v1
-  void set(const uint8_t& val){
+  void set(uint8_t val){
     v0 = val;
     v1 = val;
     refresh();
@@ -633,13 +633,13 @@ public:
   uint8_t p0, p1; // making this a bitfield wouldn't improve anything
   uint8_t v0, v1;
 
-  BiLED_pwm(const uint8_t& pin0, const uint8_t& pin1):
+  BiLED_pwm(uint8_t pin0, uint8_t pin1):
     p0(pin0), p1(pin1), v0(0), v1(0)
   {
     pinMode(p0, OUTPUT);
     pinMode(p1, OUTPUT);
   }
-  BiLED_pwm(const uint8_t& pin0, const uint8_t& pin1, const uint8_t& val0, const uint8_t& val1):
+  BiLED_pwm(uint8_t pin0, uint8_t pin1, uint8_t val0, uint8_t val1):
     p0(pin0), p1(pin1), v0(val0), v1(val1)
   {
     pinMode(p0, OUTPUT);
@@ -653,7 +653,7 @@ public:
   }
 
   // sets values and applys
-  void set(const uint8_t& val0, const uint8_t& val1){
+  void set(uint8_t val0, uint8_t val1){
     v0 = val0;
     v1 = val1;
     refresh();
