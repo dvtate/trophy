@@ -47,11 +47,11 @@ class DigitalColor {
 public:
   bool r : 1, g : 1, b : 1;
 
-  Color(): r(LOW), g(LOW), b(LOW) {}
-  Color(bool red, bool green, bool blue):
+  DigitalColor(): r(LOW), g(LOW), b(LOW) {}
+  DigitalColor(bool red, bool green, bool blue):
     r(red), g(green), b(blue)
   { }
-  Color(bool value):
+  DigitalColor(bool value):
     r(value), g(value), b(value)
   { }
 
@@ -135,13 +135,13 @@ namespace color {
 
 
 // base colors
-#define COLOR_RED Color(255, 0, 0)
-#define COLOR_YELLOW Color(255, 255, 0)
-#define COLOR_GREEN Color(0, 255, 0)
-#define COLOR_CYAN Color(0, 255, 255)
-#define COLOR_BLUE Color(0, 0, 255)
-#define COLOR_PURPLE Color(255, 0, 255)
-#define COLOR_WHITE Color(255, 255, 255)
-#define COLOR_OFF Color(0, 0, 0)
+#define COLOR_RED DigitalColor(255, 0, 0)
+#define COLOR_YELLOW DigitalColor(255, 255, 0)
+#define COLOR_GREEN DigitalColor(0, 255, 0)
+#define COLOR_CYAN DigitalColor(0, 255, 255)
+#define COLOR_BLUE DigitalColor(0, 0, 255)
+#define COLOR_PURPLE DigitalColor(255, 0, 255)
+#define COLOR_WHITE DigitalColor(255, 255, 255)
+#define COLOR_OFF DigitalColor(0, 0, 0)
 #define COLOR_BLACK COLOR_OFF
 #endif
