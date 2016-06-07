@@ -30,13 +30,48 @@ public:
     b *= multiplier;
     return *this;
   }
-  void set(const uint8_t& _r, const uint8_t& _g, const uint8_t& _b){
-    r = _r;
-    g = _g;
-    b = _b;
+
+  void set(uint8_t red, uint8_t green, uint8_t blue){
+    r = red;
+    g = green;
+    b = blue;
   }
+
+  void set(uint8_t val)
+    { r = g = b = val; }
 };
 
+// POD digital color class
+class DigitalColor {
+
+public:
+  bool r : 1, g : 1, b : 1;
+
+  Color(): r(LOW), g(LOW), b(LOW) {}
+  Color(bool red, bool green, bool blue):
+    r(red), g(green), b(blue)
+  { }
+  Color(bool value):
+    r(value), g(value), b(value)
+  { }
+
+  DigitalColor& invert(){
+    r = !r;
+    g = !g;
+    b = !b;
+    return *this;
+  }
+
+  void set(bool red, bool green, bool blue){
+    r = red;
+    g = green;
+    b = blue;
+  }
+
+  void set(bool val)
+    { r = g = b = val; }
+
+};
 
 namespace color {
 
