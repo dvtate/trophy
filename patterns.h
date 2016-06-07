@@ -11,7 +11,7 @@ extern void resetLEDs(void);
 extern void refreshLEDs(void);
 
 
-#define NUMBER_OF_PATTERNS 7     ////////////////////////////////////// edit when changed...
+#define NUMBER_OF_PATTERNS 7     // edit when changed...
 
 // defined in pattern.h
 namespace patterns_common {
@@ -491,14 +491,18 @@ namespace pattern6 {
     unsigned int  color : 3,
                   phase : 3;
   } data;
-
+  
+  
+  
   void init(){
     resetLEDs();
     soundCheck();
     if (checkInput()) return;
 
 
-    cycles = data.color = data.phase = 0;
+    cycles = data.phase = 0;
+    // NOTE: I didn't reset data.color because I want it to be
+    //       less predictable.
   }
 
   void periodic(){
