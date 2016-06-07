@@ -133,15 +133,26 @@ namespace color {
 }
 
 
-
 // base colors
-#define COLOR_RED DigitalColor(255, 0, 0)
-#define COLOR_YELLOW DigitalColor(255, 255, 0)
-#define COLOR_GREEN DigitalColor(0, 255, 0)
-#define COLOR_CYAN DigitalColor(0, 255, 255)
-#define COLOR_BLUE DigitalColor(0, 0, 255)
-#define COLOR_PURPLE DigitalColor(255, 0, 255)
-#define COLOR_WHITE DigitalColor(255, 255, 255)
-#define COLOR_OFF DigitalColor(0, 0, 0)
+#define COLOR_RED Color(255, 0, 0)
+#define COLOR_YELLOW Color(255, 255, 0)
+#define COLOR_GREEN Color(0, 255, 0)
+#define COLOR_CYAN Color(0, 255, 255)
+#define COLOR_BLUE Color(0, 0, 255)
+#define COLOR_PURPLE Color(255, 0, 255)
+#define COLOR_WHITE Color(255, 255, 255)
+#define COLOR_OFF Color(0, 0, 0)
 #define COLOR_BLACK COLOR_OFF
+
+// base digital colors
+#define D_COLOR_RED DigitalColor(HIGH, LOW, LOW)
+#define D_COLOR_YELLOW DigitalColor(HIGH, HIGH, LOW)
+#define D_COLOR_GREEN DigitalColor(LOW, HIGH, LOW)
+#define D_COLOR_CYAN DigitalColor(LOW, HIGH, HIGH)
+#define D_COLOR_BLUE DigitalColor(LOW, LOW, HIGH)
+#define D_COLOR_PURPLE DigitalColor(HIGH, LOW, HIGH)
+#define D_COLOR_WHITE DigitalColor(HIGH, HIGH, HIGH)
+#define D_COLOR_OFF DigitalColor(LOW, LOW, LOW)
+#define D_COLOR_BLACK D_COLOR_OFF
+
 #endif
