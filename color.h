@@ -10,11 +10,11 @@ public:
 
   Color(): r(0), g(0), b(0) {}
   Color(const uint8_t& _r, const uint8_t& _g, const uint8_t& _b):
-    r(_r), g(_g), b(_b) 
+    r(_r), g(_g), b(_b)
   { }
 
-  Color(const uint8_t& val) : 
-    r(val), g(val), b(val) 
+  Color(const uint8_t& val) :
+    r(val), g(val), b(val)
   { }
 
   Color& invert(){
@@ -47,6 +47,7 @@ namespace color {
     return c;
   }
 
+  // cycle between 3 values/colors
   inline void cycle3(uint8_t& v0, uint8_t& v1, uint8_t& v2, uint8_t& curHi){
     if (curHi == 0) {
       v0--; v1++;
@@ -64,12 +65,13 @@ namespace color {
       curHi = 0;
   }
 
+  // reciprocate between 2 values
   inline void cycle2(uint8_t& v0, uint8_t& v1, bool& curHi){
     if (v0 == 0)
       curHi = 1;
     else if (v1 == 0)
       curHi = 0;
-    
+
     if (curHi == 0) {
       v0--; v1++;
     } else {
@@ -77,14 +79,15 @@ namespace color {
     }
 
   }
-  
+
+  // reciprocate between 2 values
   inline void cycle2(uint8_t& v0, uint8_t& v1, bool& curHi, uint8_t incr){
     while (incr--) {
       if (v0 == 0)
         curHi = 1;
       else if (v1 == 0)
         curHi = 0;
-      
+
       if (curHi == 0) {
         v0--; v1++;
       } else {
