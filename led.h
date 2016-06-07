@@ -11,7 +11,7 @@
 class TriLED {
 public:
   Color color;
-  unsigned char pr : 7, pg : 7, pb : 7;
+  unsigned int pr : 7, pg : 7, pb : 7;
   
   TriLED(const uint8_t& redPin, const uint8_t& greenPin, const uint8_t& bluePin):
     pr(redPin), pg(greenPin), pb(bluePin), color(0,0,0) 
@@ -271,7 +271,7 @@ public:
 class DigitalTriLED {
 public:
   bool r : 1, g : 1, b : 1;
-  unsigned char pr : 7, pg : 7, pb : 7;
+  unsigned int pr : 7, pg : 7, pb : 7;
   
   DigitalTriLED(const uint8_t& redPin, const uint8_t& greenPin, const uint8_t& bluePin):
     pr(redPin), pg(greenPin), pb(bluePin), r(LOW), g(LOW), b(LOW) 
@@ -477,8 +477,8 @@ public:
 
 class BiLED { // digital
 public:
-  unsigned char p0:7, p1:7;
-  bool v0:1, v1:1; // could be replaced by uint8_t for PWM output
+  unsigned int p0 : 7, p1 : 7;
+  bool v0 : 1, v1 : 1; // could be replaced by uint8_t for PWM output
   
   BiLED(const uint8_t& pin0, const uint8_t& pin1):
     p0(pin0), p1(pin1), v0(0), v1(0)
@@ -522,11 +522,11 @@ public:
   }
 };
 
-
+// 2 leds with PWM capabilities
 class BiLED_pwm {
 public:
-  uint8_t p0, p1;
-  uint8_t v0, v1; // could be replaced by uint8_t for PWM output
+  uint8_t p0, p1; // making this a bitfield wouldn't improve anything
+  uint8_t v0, v1;
   
   BiLED_pwm(const uint8_t& pin0, const uint8_t& pin1):
     p0(pin0), p1(pin1), v0(0), v1(0)
@@ -541,10 +541,13 @@ public:
     pinMode(p1, OUTPUT);
   }
 
+  // burns in values
   void refresh(){
     analogWrite(p0, v0);
     analogWrite(p1, v1);
   }
+  
+  // sets values and applys
   void set(const uint8_t& val0, const uint8_t& val1){
     v0 = val0;
     v1 = val1;
@@ -557,6 +560,7 @@ public:
     analogWrite(p1, 0);
   }
   
+  // switch v0 and v1
   void swap(){
     uint8_t temp = v0;
     v0 = v1;
@@ -564,6 +568,7 @@ public:
     refresh();
   }
 
+  // reciprocate between v0 and v1
   void seeSaw(uint8_t incr = 1){
  
     static bool curHi = 0;
@@ -581,7 +586,7 @@ public:
     }
     refresh();
   }
-  
+  // reciprocate between v0 and v1
   void seeSaw(bool& curHi, uint8_t incr = 1){
   
     while (incr-- > 0) {
