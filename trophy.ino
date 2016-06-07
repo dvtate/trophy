@@ -2,9 +2,10 @@
 
 #include <inttypes.h>
 
-#include "led.h" // Lights and colors
-#include "ultrasonic.h" // ultrasonic range finder
-#include "pushButton.h" // pushbutton
+// custom parts libraries :D
+#include "led.h"
+#include "ultrasonic.h" 
+#include "pushButton.h"
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12,16 +13,19 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 // 2 PWM RGB LEDs
-TriLED top[2] { TriLED(13, 12, 11), TriLED(10, 9, 8) };
+TriLED top[2] {
+  TriLED(13, 12, 11), TriLED(10, 9, 8)
+};
 
 // 4 digital RGB LEDs 
-// I already know the arrangement is fucked up...
-DigitalTriLED base[2][2]{ // fix arrangement final draft...
+// pretend its like a coordinate plane... this is bad...
+DigitalTriLED base[2][2]{ // fix this in final draft...
   DigitalTriLED(47, 46, 51), DigitalTriLED(42, 43, 52),
   DigitalTriLED(49, 48, 50), DigitalTriLED(45, 44, 53),
 };
 
-// the ultrasonic sensor
+
+// the ultrasonic sensor / user interface
 Ultrasonic sonar(A0);
 
 
@@ -38,7 +42,7 @@ bool audioEnabled = true;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
+// turn all the LEDs off
 void resetLEDs(){
   top[0].set(LOW);
   top[1].set(LOW);
@@ -49,6 +53,8 @@ void resetLEDs(){
   base[1][1].set(LOW);
 }
 
+
+// burn in the led values
 void refreshLEDs(){
   top[0].refresh();
   top[1].refresh();
@@ -66,6 +72,7 @@ void refreshLEDs(){
 
 
 
+// plays a frequency based on the proximity to the sensor (while in range)
 void theremin(){
   uint16_t resp = 0;
   bool state = LOW;
@@ -92,7 +99,7 @@ bool checkInput(){
   // if user's hand is detected
   if (sonar.getCm() < 30 && previous) {
 
-    pickNextPattern();
+    pickNextPattern(); // switches patterns
 
     if (audioEnabled) // ring 150Hz Square tone for 10ms
       theremin();//tone(BUZZPIN, 150, 50); 
@@ -103,6 +110,8 @@ bool checkInput(){
   return false;
 }
 
+
+
 void soundCheck(){
   audioEnabled = !buzzButton.toggle();
   digitalWrite(BUZZLEDPIN, audioEnabled);
@@ -111,16 +120,11 @@ void soundCheck(){
 
 void setup(){
 
-  //Serial.begin(9600);
-
   // disable pull-up resistor
   pinMode(BUZZLEDPIN, OUTPUT);
   pinMode(BUZZPIN, OUTPUT);
 
 }
 
-void loop(){
-
-  // so simple 
-  callPattern(patternNumber);
-}
+void loop()
+  { callPattern(patternNumber); }
