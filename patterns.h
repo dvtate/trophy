@@ -10,7 +10,8 @@ extern void soundCheck(void);
 extern void resetLEDs(void);
 extern void refreshLEDs(void);
 
-#define NUMBER_OF_PATTERNS 7
+
+#define NUMBER_OF_PATTERNS 7     ////////////////////////////////////// edit when changed...
 
 // defined in pattern.h
 namespace patterns_common {
@@ -22,8 +23,8 @@ namespace examplePattern {
 
   // called once before periodic begins
   void init (){
-    
-    soundCheck(); // verify sound and input agree
+
+    soundCheck(); // should be called before checkInput();
     if(checkInput()) return;
 
     // init code here...
@@ -33,53 +34,59 @@ namespace examplePattern {
   void periodic(){
 
     // these must be called at least once.
-    soundCheck(); // verify sound and input agree
+    soundCheck();
     if(checkInput()) return; // NOTE: this delays 4 or 8 miliseconds
 
   }
-  
+
   // called before ending this pattern
   void disable(){ }
-  
+
 }
 
 
 namespace pattern0 {
-
+  /// color cycle everything
   // local variables
-  uint8_t cycles = 0, curHi = 0;
-  
+  uint8_t cycles, curHi;
+
   void init(){
-    
+
+    // pre-checks
     resetLEDs();
     soundCheck();
     if (checkInput()) return;
-    
+
+    // reset variables
     cycles = 0;
     curHi = 0;
+
+    // set LEDs to red
     top[0].set(Color(255, 0, 0));
     top[1].set(Color(255, 0, 0));
     base[0][0].set(255, 0, 0);
     base[0][1].set(255, 0, 0);
     base[1][0].set(255, 0, 0);
     base[1][1].set(255, 0, 0);
+
     //Serial.println("pattern0");
   }
 
   void periodic(){
-    soundCheck(); // should be called before checkInput();
+
+    soundCheck();
     if (checkInput()) return;
 
     top[0].colorCycle(curHi, 4);
     top[1].colorCycle(curHi, 4);
-  
+
     // every 255/4 = 63.75 cycles switch color
     for (uint8_t i = 0; i < 4; i++) // runs 4x faster
       if ( ( ++cycles ) == 0 ) {
         base[0][0].colorCycle("rgb"); // boolean types don't need a static curHi
         base[0][1].colorCycle("rgb"); //  a static curHi...
         base[1][0].colorCycle("rgb"); // this is good :D
-        base[1][1].colorCycle("rgb"); 
+        base[1][1].colorCycle("rgb");
       }
 
   }
@@ -91,39 +98,41 @@ namespace pattern0 {
 
 
 namespace pattern1 {
-
+  /// explaining this will take too much text...
+  
+  
   // local variables
-  bool curHi = 0;
-  uint8_t cycles = 0;
+  bool curHi;
+  uint8_t cycles;
 
   struct {
-    unsigned int r : 3, g : 3; 
+    unsigned int r : 3, g : 3;
   } activeLED;
-  
+
   void init(){
 
     resetLEDs();
     soundCheck();
     if (checkInput()) return;
-    
+
     top[0].color.g = 0;
     top[1].color.g = 255;
 
     activeLED.r = activeLED.g = 0;
-    
+
     curHi = 0;
 
-    cycles = 1;
+    cycles = 0;
     //Serial.println("pattern1");
   }
-  
+
   // a local function
   inline void setLEDsValsZero(){
     top[0].color.r = 0;
     top[0].color.b = 0;
     top[1].color.r = 0;
     top[1].color.b = 0;
-    
+
     base[0][0].setNull();
     base[0][1].setNull();
     base[1][0].setNull();
@@ -154,7 +163,7 @@ namespace pattern1 {
           activeLED.r++;
 
       }
-      
+
 
     // this sets the values to 0 without writing to the lights
     // we will tell which lights to turn on.
@@ -169,7 +178,7 @@ namespace pattern1 {
       case 3: base[1][0].g = HIGH; break;
     }
 
-        
+
     // reds:
     switch (activeLED.r) {
       case 5: base[0][0].r = HIGH; break;
@@ -179,20 +188,20 @@ namespace pattern1 {
       case 1: base[1][1].r = HIGH; break;
       case 0: base[1][0].r = HIGH; break;
     }
-    
 
-    // blues:    
+
+    // blues:
     switch (activeLED.r) {
       case 0: base[0][0].b = HIGH; break;
       case 1: base[0][1].b = HIGH; break;
-      case 2: top[1].color.b = 255; break;      
-      case 3: top[0].color.b = 255; break;      
+      case 2: top[1].color.b = 255; break;
+      case 3: top[0].color.b = 255; break;
       case 4: base[1][1].b = HIGH; break;
       case 5: base[1][0].b = HIGH; break;
     }
-    
+
     refreshLEDs();
-    
+
   }
 
   void disable(){}
@@ -201,19 +210,21 @@ namespace pattern1 {
 
 
 namespace pattern2 {
-
-  // local variables
-  uint8_t cycles = 0;
+  /// whirlpool effect where the lights change color as they 
+  /// circle around
   
+  // local variables
+  uint8_t cycles;
+
 
   struct {
       unsigned int activeLED : 3, colorNum : 3;
   } light;
-  
+
   Color* currentColor;
-  
+
   void init(){
-    
+
     resetLEDs();
     soundCheck();
     if (checkInput()) return;
@@ -225,27 +236,27 @@ namespace pattern2 {
   }
 
   void periodic(){
-    soundCheck(); 
+    soundCheck();
     if (checkInput()) return;
 
     for (unsigned char i = 0; i < 8; i++) // runs 8x faster
       if ( ( ++cycles ) == 0 )
         if (light.activeLED == 5) {
-          
+
           light.activeLED = 0;
 
           if (light.colorNum == 5) // after each cycle change the color
             light.colorNum = 0;
-          else 
+          else
             light.colorNum++;
-  
+
           currentColor = &patterns_common::colors[light.colorNum];
-          
+
         } else {
           light.activeLED++;
         }
-   
-    
+
+
     switch (light.activeLED) {
       case 0: base[0][0].set(*currentColor); break;
       case 1: base[0][1].set(*currentColor); break;
@@ -255,22 +266,18 @@ namespace pattern2 {
       case 5: base[1][0].set(*currentColor); break;
     }
 
-    
+
   }
 
   void disable(){}
 }
 
-// this doesn't work the way I wanted it to...
-// but it stil looks good...
 namespace pattern3 {
+  // this doesn't work the way I wanted it to...
+  // but it stil looks good...
 
-  uint8_t cycles = 0;
-
-  uint8_t startColor = 0;
-  uint8_t curColor = 0;
-  
-  bool reverse = false;
+  uint8_t cycles, startColor, curColor;
+  bool reverse;
 
   DigitalTriLED &center0 = base[0][1], &center1 = base[1][1];
 
@@ -279,7 +286,7 @@ namespace pattern3 {
     top[1].setNull();
     base[0][0].setNull();
     base[1][0].setNull();
-  }  
+  }
   void pushCorners(const Color& clr){
     top[0].push(clr);
     top[1].push(clr);
@@ -324,84 +331,84 @@ namespace pattern3 {
     resetLEDs();
     soundCheck();
     if (checkInput()) return;
-    
-    
-    cycles = 0;
 
+
+    cycles = 0;
     startColor = 0;
     curColor = 0;
-  
     reverse = false;
+
     //Serial.println("pattern3");
   }
 
   void periodic(){
-    soundCheck(); 
+
+    soundCheck();
     if (checkInput()) return;
-    
+
     for (unsigned char i = 0; i < 4; i++) // runs 4x faster
-    if ( ( ++cycles ) == 0 ) {
-      if (curColor == 2) {
-        
-        if (startColor == 2)
-          startColor = 0;
-        else 
-          startColor++;
+      if ( ( ++cycles ) == 0 ) {
+        if (curColor == 2) {
 
-        curColor = 0;
-        reverse = !reverse;
-      } else {
-        curColor++;
+          if (startColor == 2)
+            startColor = 0;
+          else
+            startColor++;
+            curColor = 0;
+            reverse = !reverse;
+        } else {
+          curColor++;
+        }
+
       }
-
-    }
 
     nullCorners();
 
+    // I don't know what I was thinking... SMH
     switch (startColor) {
-    
-    case 0: 
+    case 0:
       switch (curColor) {
         case 0: pmRed(); break;
         case 1: pmGreen(); break;
         case 2: pmBlue(); break;
       }
       break;
-    case 1: 
+    case 1:
       switch (curColor) {
         case 0: pmGreen(); break;
         case 1: pmBlue(); break;
         case 2: pmRed(); break;
-      } 
+      }
       break;
-    case 2: 
+    case 2:
       switch (curColor) {
         case 0: pmBlue(); break;
         case 1: pmRed(); break;
         case 2: pmGreen(); break;
-      } 
+      }
       break;
-      
+
     }
 
     refreshLEDs();
   }
-  
+
   void disable(){} // do nothing...
 
 }
 
 
 namespace pattern4 {
-
-  uint8_t cycles = 0;
+  // color selection goes from one side to the other
+  // resulting in a line of different colors
+  uint8_t cycles, offset;
 
   void init(){
     resetLEDs();
-    soundCheck(); 
+    soundCheck();
     if (checkInput()) return;
 
-    
+    // apply initial colors
     base[0][0].set(patterns_common::colors[0]);
     base[0][1].set(patterns_common::colors[1]);
     top[1].set(patterns_common::colors[2]);
@@ -409,51 +416,39 @@ namespace pattern4 {
     top[0].set(patterns_common::colors[3]);
     base[1][1].set(patterns_common::colors[4]);
     base[1][0].set(patterns_common::colors[5]);
-    
+
+    cycles = 0;
+    offset = 0;
     //Serial.println("pattern4");
-
-/*
-    base[0][0].set(255, 0, 0);
-    base[0][1].set(0, 255, 0);
-    top[1].color.set(0, 0, 255);
-
-    top[0].color.set(255, 0, 0);
-    base[1][1].set(0, 255, 0);
-    base[1][0].set(0, 0, 255);
-*/
   }
 
   void periodic(){
-    soundCheck(); 
+    soundCheck();
     if (checkInput()) return;
-
-
-    static uint8_t offset = 0;
 
     for (unsigned char i = 0; i < 4; i++) // runs 4x faster
       if ( ( cycles++ ) == 0 ) {
         base[0][0].set(patterns_common::colors[offset % 8]);
         base[0][1].set(patterns_common::colors[(offset + 1) % 8]);
         top[1].set(patterns_common::colors[(offset + 2) % 8]);
-    
+
         top[0].set(patterns_common::colors[(offset + 3) % 8]);
         base[1][1].set(patterns_common::colors[(offset + 4) % 8]);
         base[1][0].set(patterns_common::colors[(offset + 5) % 8]);
         offset++;
       }
-
   }
 
   void disable(){}
 }
 
 namespace pattern5 {
-
+  // rgb version of pattern 4
   uint8_t cycles = 0;
 
   void init(){
     resetLEDs();
-    soundCheck(); 
+    soundCheck();
     if (checkInput()) return;
 
     base[0][0].set(255, 0, 0);
@@ -463,13 +458,13 @@ namespace pattern5 {
     top[0].color.set(255, 0, 0);
     base[1][1].set(0, 255, 0);
     base[1][0].set(0, 0, 255);
-    
+
     //Serial.println("pattern5");
 
   }
 
   void periodic(){
-    soundCheck(); 
+    soundCheck();
     if (checkInput()) return;
 
     for (unsigned char i = 0; i < 3; i++) // runs 3x faster
@@ -488,49 +483,52 @@ namespace pattern5 {
 }
 
 namespace pattern6 {
+  /// color waves that go back and fourth switching colors each time
 
-  uint8_t cycles = 0;
+
+  uint8_t cycles;
 
   struct {
-    unsigned int  color : 3, 
+    unsigned int  color : 3,
                   phase : 3;
   } data;
 
   void init(){
     resetLEDs();
-    soundCheck(); 
+    soundCheck();
     if (checkInput()) return;
 
 
-    data.color = data.phase = 0;
+    cycles = data.color = data.phase = 0;
   }
 
   void periodic(){
-    soundCheck(); 
+    soundCheck();
     if (checkInput()) return;
 
     // this nesting is ugly
-    for (unsigned char i = 0; i < 4; i++) // runs 4x faster
+    for (unsigned char i = 0; i < 4; i++) // runs 4x quicker
       if ( ( ++cycles ) == 0 ) {
         if (data.phase == 5)
           data.phase = 0;
         else
           data.phase++;
 
+        
         switch (data.phase) {
-    
+
         case 0: // bottom 2
           base[0][0].setColor(patterns_common::colors[data.color]);
           base[1][0].setColor(patterns_common::colors[data.color]);
           break;
-          
+
         case 1: // bottom 4
           base[0][0].setColor(patterns_common::colors[data.color]);
           base[0][1].setColor(patterns_common::colors[data.color]);
           base[1][0].setColor(patterns_common::colors[data.color]);
           base[1][1].setColor(patterns_common::colors[data.color]);
           break;
-    
+
         case 2: case 5: // all HIGH
           base[0][0].setColor(patterns_common::colors[data.color]);
           base[0][1].setColor(patterns_common::colors[data.color]);
@@ -539,25 +537,26 @@ namespace pattern6 {
           top[0].setColor(patterns_common::colors[data.color]);
           top[1].setColor(patterns_common::colors[data.color]);
 
+          // pick next color to write
           // not random, but close enough :T
           for (uint8_t i = 0; i < 6; i++)
             if (data.color == 7) data.color = 0;
             else data.color++;
-          
+
           break;
-        
+
         case 3: // top 2
           top[0].setColor(patterns_common::colors[data.color]);
           top[1].setColor(patterns_common::colors[data.color]);
           break;
-    
+
         case 4: // top 4
           top[0].setColor(patterns_common::colors[data.color]);
           top[1].setColor(patterns_common::colors[data.color]);
           base[0][1].setColor(patterns_common::colors[data.color]);
           base[1][1].setColor(patterns_common::colors[data.color]);
           break;
-    
+
         }
       }
   }
