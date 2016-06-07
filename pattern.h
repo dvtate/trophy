@@ -6,18 +6,23 @@
 
 uint8_t patternNumber = 0;
 
+// these are defined elsewhere.
 extern bool checkInput();
 extern void soundCheck();
 
 
+// some things are most efficient to be defined once for
+// all the patterns instead of being declared and defined
+// multiple times as each pattern needs it.
 namespace patterns_common {
 
   Color colors[8] {
-    COLOR_RED, COLOR_YELLOW, COLOR_GREEN, COLOR_CYAN, 
+    COLOR_RED, COLOR_YELLOW, COLOR_GREEN, COLOR_CYAN,
     COLOR_BLUE, COLOR_PURPLE, COLOR_WHITE, COLOR_OFF
   };
 
   bool initialized = false;
+
 }
 
 
@@ -30,7 +35,7 @@ namespace patterns_common {
     N::periodic();\
   }
 
-
+// initialize once and then call pattern::periodic()
 inline void callPattern(const uint8_t& patNum){
   switch (patNum) {
   case 0:
@@ -57,8 +62,8 @@ inline void callPattern(const uint8_t& patNum){
   }
 }
 
-
-inline void endPattern(const uint8_t& patNum){
+// clean up after each pattern
+inline void endPattern(uint8_t patNum){
   switch (patNum) {
   case 0:
     pattern0::disable();
@@ -82,11 +87,10 @@ inline void endPattern(const uint8_t& patNum){
     pattern6::disable();
     break;
   }
-  
+
   patterns_common::initialized = false;
   resetLEDs();
 }
-
 
 
 // choose a different pattern
@@ -98,8 +102,6 @@ inline void pickNextPattern(){
     patternNumber++;
   else
     patternNumber = 0;
-
 }
-
 
 #endif
