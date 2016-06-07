@@ -15,7 +15,7 @@ extern void refreshLEDs(void);
 
 // defined in pattern.h
 namespace patterns_common {
-  extern Color colors[8];
+  extern DigitalColor colors[8];
 }
 
 
@@ -208,7 +208,6 @@ namespace pattern1 {
 }
 
 
-
 namespace pattern2 {
   /// whirlpool effect where the lights change color as they 
   /// circle around
@@ -221,7 +220,7 @@ namespace pattern2 {
       unsigned int activeLED : 3, colorNum : 3;
   } light;
 
-  Color* currentColor;
+  DigitalColor* currentColor;
 
   void init(){
 
@@ -239,7 +238,7 @@ namespace pattern2 {
     soundCheck();
     if (checkInput()) return;
 
-    for (unsigned char i = 0; i < 8; i++) // runs 8x faster
+    for (unsigned char i = 0; i < 10; i++) // runs 8x faster
       if ( ( ++cycles ) == 0 )
         if (light.activeLED == 5) {
 
@@ -287,7 +286,7 @@ namespace pattern3 {
     base[0][0].setNull();
     base[1][0].setNull();
   }
-  void pushCorners(const Color& clr){
+  void pushCorners(const DigitalColor& clr){
     top[0].push(clr);
     top[1].push(clr);
     base[0][0].push(clr);
@@ -296,33 +295,33 @@ namespace pattern3 {
 
   void pmRed(){
     if (!reverse) {
-      pushCorners(COLOR_RED);
+      pushCorners(D_COLOR_RED);
       center0.r = HIGH;
       center1.r = HIGH;
     } else {
-      pushCorners(COLOR_RED);
+      pushCorners(D_COLOR_RED);
       center0.r = LOW;
       center1.r = LOW;
     }
   }
   void pmGreen(){
     if (!reverse) {
-      pushCorners(COLOR_GREEN);
+      pushCorners(D_COLOR_GREEN);
       center0.g = HIGH;
       center1.g = HIGH;
     } else {
-      pushCorners(COLOR_GREEN);
+      pushCorners(D_COLOR_GREEN);
       center0.g = LOW;
       center1.g = LOW;
     }
   }
   void pmBlue(){
     if (!reverse) {
-      pushCorners(COLOR_BLUE);
+      pushCorners(D_COLOR_BLUE);
       center0.b = HIGH;
       center1.b = HIGH;
     } else {
-      pushCorners(COLOR_BLUE);
+      pushCorners(D_COLOR_BLUE);
       center0.b = LOW;
       center1.b = LOW;
     }
