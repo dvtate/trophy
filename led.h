@@ -44,6 +44,17 @@ public:
     analogWrite(pb, color.b);
   }
 
+  void setColor(DigitalColor clr){
+
+    color.r = clr.r;
+    color.g = clr.g;
+    color.b = clr.b;
+    
+    digitalWrite(pr, clr.r);
+    digitalWrite(pg, clr.g);
+    digitalWrite(pb, clr.b);
+  }
+  
   void setColor()
     { refresh(); }
 
@@ -51,7 +62,7 @@ public:
     { setColor(clr); }
 
   void set()
-    { setColor(); }
+    { refresh(); }
 
   void set(uint8_t val){
     color.r = color.g = color.b = val;
@@ -64,6 +75,9 @@ public:
     color.b = b;
     refresh();
   }
+
+  void set(DigitalColor clr)
+    { setColor(clr); }
 
   // change the color without applying the changes
   void push(const Color& clr)
@@ -174,7 +188,7 @@ public:
     while (incr-- > 0)
       color::cycle3(color.r, color.g, color.b, curHi);
 
-    setColor();
+    refresh();
   }
 
   // wrapper for color::cycle3
@@ -182,7 +196,7 @@ public:
     while (incr-- > 0)
       color::cycle3(color.r, color.g, color.b, curHi);
 
-    setColor();
+    refresh();
   }
 
   // sets the analog equivalent of the digital value
@@ -305,7 +319,7 @@ public:
     pinMode(pg, OUTPUT);
     pinMode(pb, OUTPUT);
 
-    setColor();
+    refresh();
   }
 
 };
@@ -365,7 +379,7 @@ public:
     { refresh(); }
 
   void set()
-    { setColor(); }
+    { refresh(); }
 
   void set(const Color& clr)
     { setColor(clr); }
@@ -623,7 +637,7 @@ public:
     pinMode(p0, OUTPUT);
     pinMode(p1, OUTPUT);
     // burn in current color
-    setColor();
+    refresh();
   }
 };
 
@@ -680,7 +694,7 @@ public:
 
     while (incr-- > 0) {
 
-      if (!v0 || !v1)
+      if (v0 == 0|| v1 == 0)
         curHi = !curHi;
       if (!curHi) {
         v0--; v1++;
@@ -721,9 +735,11 @@ public:
     // set them as output
     pinMode(p0, OUTPUT);
     pinMode(p1, OUTPUT);
+    
     // burn in current color
-    setColor();
+    refresh();
   }
+  
 };
 
 
