@@ -3,6 +3,8 @@
 
 #include "Arduino.h"
 
+// this really shouldn't be a class, but I didn't want
+// to clutter my code.
 class PushButton {
 public:
   unsigned char pin : 7;
@@ -13,7 +15,7 @@ public:
   { pinMode(pin, INPUT); }
 
 
-  bool get()
+  inline bool get()
     { return (value = digitalRead(pin)); }
   
   bool toggle(){
