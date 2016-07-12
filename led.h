@@ -180,6 +180,18 @@ public:
 
   }
 
+
+  // wrapper for color::cycle3
+  void inverseColorCycle(uint8_t incr = 1){
+
+    static uint8_t curHi = 0;
+
+    while (incr-- > 0)
+      color::cycle3(color.r, color.g, color.b, curHi);
+
+    writeInverse();
+  }
+
   // wrapper for color::cycle3
   void colorCycle(uint8_t incr = 1){
 
