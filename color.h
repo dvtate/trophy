@@ -6,7 +6,8 @@
 // POD color class
 class Color { // 16777216 colors
 public:
-  uint8_t r, g, b;
+  // 24-bit color
+  unsigned int r : 8, g : 8, b : 8;
 
   Color(): r(0), g(0), b(0) {}
   Color(const uint8_t& _r, const uint8_t& _g, const uint8_t& _b):
@@ -42,9 +43,10 @@ public:
 };
 
 // POD digital color class
-class DigitalColor {
+class DigitalColor { 
 
 public:
+  // 3-bit color
   bool r : 1, g : 1, b : 1;
 
   DigitalColor(): r(LOW), g(LOW), b(LOW) {}
