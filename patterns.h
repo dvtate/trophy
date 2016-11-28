@@ -566,4 +566,11 @@ namespace pattern6 {
 
   void disable(){}
 }
+
+// plan for pattern 7:
+// colored led's go from one side to the other filling one side up completely,
+// once all LED's are the same color, the color changes, and maybe (if it's not
+// difficult to implement), the direction the color comes from will also change.
+
+
 #endif
