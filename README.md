@@ -13,8 +13,8 @@ I'm testing the code on my Mega2560 but the trophy will have an arduino pro mini
 |*^#______|
 
 
-& = RGB LED [PWM]
-0 = RGB LED [digital]
+& = RGB LED [PWM] (24-bit color)
+0 = RGB LED [digital] (3-bit color)
 u = ultrasonic range finder
 * = audio-indicator led
 ^ = audio switch
