@@ -402,7 +402,7 @@ public:
   void set(bool red, bool green, bool blue)
     { return setColor(red, green, blue); }
 
-  void set(const bool& val){
+  void set(const bool val){
     r = val;
     g = val;
     b = val;
@@ -596,7 +596,7 @@ public:
     pinMode(p1, OUTPUT);
   }
 
-  BiLED(uint8_t pin0, uint8_t pin1, const bool& val0, const bool& val1):
+  BiLED(uint8_t pin0, uint8_t pin1, const bool val0, const bool val1):
     p0(pin0), p1(pin1), v0(val0), v1(val1)
   {
     pinMode(p0, OUTPUT);
@@ -639,15 +639,16 @@ public:
 
 
   // this will never get used...
-  void swapPins(uint8_t pin0, uint8_t pin1){
+  void swapPins(const uint8_t pin0, const uint8_t pin1){
     // note: this doesn't set(0) before swapping the pins.
 
+    // set them as output
+    pinMode(pin0, OUTPUT);
+    pinMode(pin1, OUTPUT);
+    
     p0 = pin0;
     p1 = pin1;
 
-    // set them as output
-    pinMode(p0, OUTPUT);
-    pinMode(p1, OUTPUT);
     // burn in current color
     refresh();
   }
