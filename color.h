@@ -7,7 +7,7 @@
 class Color { // 16777216 colors
 public:
   // 24-bit color
-  unsigned int r : 8, g : 8, b : 8;
+  uint8_t r, g, b;
 
   Color(): r(0), g(0), b(0) {}
   Color(const uint8_t& _r, const uint8_t& _g, const uint8_t& _b):
